@@ -10,8 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var textFieldSearch: UITextField!
-    @IBOutlet weak var buttonSearch: UIButton!
+    @IBAction func textFieldSearch(_ sender: UITextField) {
+    
+    }
+    
+    @IBAction func buttonSearch(_ sender: Any) {
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
