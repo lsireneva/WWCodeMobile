@@ -18,9 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Nfg-rX-xAp">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Nfg-rX-xAp">
                                 <rect key="frame" x="20" y="230" width="374" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" hint="Type a pokemon name"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -29,17 +28,15 @@
                                     <action selector="textFieldSearch:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="SJm-mV-dmd"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eBc-dv-Zqu">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eBc-dv-Zqu">
                                 <rect key="frame" x="20" y="282" width="48" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Search"/>
                                 <connections>
                                     <action selector="buttonSearch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Uc1-M5-kup"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Swifty Pokedex" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q7K-p9-OgU">
-                                <rect key="frame" x="30" y="119" width="117" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swifty Pokedex" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q7K-p9-OgU">
+                                <rect key="frame" x="148.5" y="119" width="117" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -47,6 +44,17 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <accessibility key="accessibilityConfiguration" hint="Type a pokemon name"/>
+                        <constraints>
+                            <constraint firstItem="q7K-p9-OgU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="75" id="K1V-cb-uby"/>
+                            <constraint firstItem="eBc-dv-Zqu" firstAttribute="top" secondItem="Nfg-rX-xAp" secondAttribute="bottom" constant="22" id="MiL-nm-nee"/>
+                            <constraint firstItem="Nfg-rX-xAp" firstAttribute="leading" secondItem="eBc-dv-Zqu" secondAttribute="leading" id="TYh-Vr-0fe"/>
+                            <constraint firstItem="q7K-p9-OgU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VNV-M0-TMO"/>
+                            <constraint firstItem="Nfg-rX-xAp" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="cHr-wP-fIB"/>
+                            <constraint firstItem="Nfg-rX-xAp" firstAttribute="top" secondItem="q7K-p9-OgU" secondAttribute="bottom" constant="90" id="ff6-0x-nDj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="eBc-dv-Zqu" secondAttribute="trailing" constant="346" id="ikH-o7-iuX"/>
+                            <constraint firstItem="Nfg-rX-xAp" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="rep-cj-Fve"/>
+                            <constraint firstItem="eBc-dv-Zqu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="tX5-D0-yUD"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
