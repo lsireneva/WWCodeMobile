@@ -54,9 +54,15 @@ Tip: Finish what you start and test/validate code before moving on
 #
 
 # Reflection questions:
-
 How can you apply the concept of "pragmatic paranoia" to your own software development practices?
 
 How can you improve your use of contracts, assertions, and exceptions in your code?
 
 How can you ensure that you are finishing what you start and testing/validating your code before moving on?
+=======
+How would you explain the concept of "good enough" software to a non-technical interviewer or stakeholder?
+
+How do you approach designing contracts for software components when working with a team or stakeholders who have different expectations or requirements?
+
+How do you ensure that contracts are maintained and updated as software components evolve over time?
+
