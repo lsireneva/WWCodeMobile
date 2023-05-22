@@ -13,3 +13,7 @@ You can share your project solutions inside this folder :)
 - or anything else - feel free to share some other concerns we ought to consider 🙋🏽‍♀️
 
 **🗣️We can then discuss these in our next session! 👩🏻‍🏫**
+
+Register for our discussion Zoom session on June 2nd on the [WWCode Mobile events page](https://www.womenwhocode.com/mobile/events)
+
+Good luck!
