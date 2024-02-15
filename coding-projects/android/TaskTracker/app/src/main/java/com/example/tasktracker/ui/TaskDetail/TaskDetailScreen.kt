@@ -121,10 +121,11 @@ fun TaskDetailScreen() {
                     Color.Gray,
                     RoundedCornerShape(5)
                 ),
-            label = { Text(text = stringResource(id = R.string.textfield_label)) },
+            placeholder = { Text(text = stringResource(id = R.string.textfield_placeholder)) },
             maxLines = 20,
             colors = TextFieldDefaults.textFieldColors(
                 unfocusedLabelColor = Color.Gray,
+                placeholderColor = Color.Gray,
                 cursorColor = Color.Gray,
                 focusedLabelColor = Color.Gray,
                 textColor = Color.Black,
@@ -276,4 +277,3 @@ fun TaskDetailDialogPreview() {
         onDismissRequest = {}) {
     }
 }
-

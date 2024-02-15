@@ -7,7 +7,7 @@
     <string name="start_time_label">start time</string>
     <string name="end_time_label">end time</string>
     <string name="done">done</string>
-    <string name="textfield_label">Today I worked on ...</string>
+    <string name="textfield_placeholder">Today I worked on ...</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
