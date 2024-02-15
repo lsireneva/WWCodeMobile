@@ -10,4 +10,7 @@
     <string name="textfield_label">Today I worked on ...</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="close">Close</string>
+    <string name="detail_delete_flow">Are you sure you want to delete this entry?</string>
 </resources>
