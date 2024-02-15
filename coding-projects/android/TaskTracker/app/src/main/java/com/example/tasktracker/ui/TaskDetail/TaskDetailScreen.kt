@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.tasktracker.R
@@ -53,6 +51,7 @@ import com.example.tasktracker.ui.theme.Green
  * Created by Gauri Gadkari on 1/23/24.
  * Screen to display task details and add, edit or delete task
  * Developed compose UI by Liubov Sireneva on 1/29/24
+ * Added DetailDialog and Delete flow by Liubov Sireneva 2/14/24
  */
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +61,7 @@ fun TaskDetailScreen() {
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
-        border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Color.Black),
+        border = BorderStroke(dimensionResource(R.dimen.border_thickness_1), Color.Black),
         modifier = Modifier
             .padding(dimensionResource(R.dimen.medium_padding))
             .wrapContentSize()
@@ -71,9 +70,9 @@ fun TaskDetailScreen() {
 
     ) {
         val dateInfo =
-            "JAN 29 2024" //these values should be changed, it needs to be get from ViewModel
-        val startTimeInfo = "08:22:10"
-        val endTimeInfo = "09:12:01"
+            "JAN 29 2024" /*TODO when data persistence will be ready*/
+        val startTimeInfo = "08:22:10" /*TODO when data persistence will be ready*/
+        val endTimeInfo = "09:12:01" /*TODO when data persistence will be ready*/
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -118,7 +117,7 @@ fun TaskDetailScreen() {
                 .fillMaxWidth()
                 .sizeIn(minHeight = dimensionResource(R.dimen.detail_textfield_min_height))
                 .border(
-                    dimensionResource(R.dimen.detail_border_thickness),
+                    dimensionResource(R.dimen.border_thickness_1),
                     Color.Gray,
                     RoundedCornerShape(5)
                 ),
@@ -150,17 +149,17 @@ fun TaskDetailScreen() {
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Color.White, contentColor = Green
             ),
-            border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Green),
+            border = BorderStroke(dimensionResource(R.dimen.border_thickness_1), Green),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(
                     top = dimensionResource(R.dimen.detail_done_button_padding),
-                    bottom = dimensionResource(R.dimen.small_padding)
+                    bottom = dimensionResource(R.dimen.medium_padding)
+                )
+                .size(
+                    dimensionResource(R.dimen.detail_done_button_width),
+                    dimensionResource(R.dimen.detail_done_button_padding)
                 ),
-            contentPadding = PaddingValues(
-                horizontal = dimensionResource(R.dimen.detail_done_button_inside_padding),
-                vertical = dimensionResource(R.dimen.small_padding)
-            )
         ) {
             Text(text = stringResource(id = R.string.done).uppercase())
         }
@@ -173,7 +172,7 @@ fun DetailDialog(text: String, onDismissRequest: () -> Unit, onConfirmation: () 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         OutlinedCard(
             colors = CardDefaults.cardColors(containerColor = Color.White),
-            border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Color.Black),
+            border = BorderStroke(dimensionResource(R.dimen.border_thickness_1), Color.Black),
             modifier = Modifier
                 .padding(dimensionResource(R.dimen.medium_padding))
                 .wrapContentSize(),
@@ -188,7 +187,10 @@ fun DetailDialog(text: String, onDismissRequest: () -> Unit, onConfirmation: () 
                 horizontalAlignment = Alignment.End
             ) {
                 IconButton(onClick = onDismissRequest) {
-                    Icon(Icons.Default.Close, contentDescription = stringResource(id = R.string.close))
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = stringResource(id = R.string.close)
+                    )
                 }
                 Text(
                     modifier = Modifier.padding(dimensionResource(R.dimen.medium_padding)),
@@ -205,26 +207,27 @@ fun DetailDialog(text: String, onDismissRequest: () -> Unit, onConfirmation: () 
                         ),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button(
-                        onClick = onConfirmation,
-                        modifier = Modifier.size(100.dp, 40.dp),
-                        colors = ButtonDefaults.buttonColors(Color.DarkGray),
-                        shape = RoundedCornerShape(dimensionResource(R.dimen.detail_button_corner_shape))
-                    ) {
-                        Text(text = stringResource(id = R.string.ok))
-                    }
-                    Button(
-                        onClick = onDismissRequest,
-                        modifier = Modifier.size(100.dp, 40.dp),
-                        colors = ButtonDefaults.buttonColors(Color.DarkGray),
-                        shape = RoundedCornerShape(dimensionResource(R.dimen.detail_button_corner_shape))
-                    ) {
-                        Text(text = stringResource(id = R.string.cancel))
-                    }
+                    GrayButton(buttonText = stringResource(id = R.string.ok), onConfirmation)
+                    GrayButton(buttonText = stringResource(id = R.string.cancel), onDismissRequest)
                 }
             }
 
         }
+    }
+}
+
+@Composable
+fun GrayButton(buttonText: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier.size(
+            dimensionResource(R.dimen.detail_gray_button_width),
+            dimensionResource(R.dimen.detail_gray_button_height)
+        ),
+        colors = ButtonDefaults.buttonColors(Color.DarkGray),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.detail_button_corner_shape))
+    ) {
+        Text(text = buttonText)
     }
 }
 
