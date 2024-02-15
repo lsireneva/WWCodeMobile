@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -50,13 +51,11 @@ class TaskDetailScreen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TaskDetailScreen(onNavigateToList: () -> Unit) {
-        val viewModel = remember { TaskDetailViewModel() }
         val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember { mutableStateOf(false) }
 
         // Function to handle cancel confirmation
         val onCancelConfirmed = {
             setShowCancelConfirmationPopup(false)
-            viewModel.cancelTask()
             onNavigateToList()
         }
 
