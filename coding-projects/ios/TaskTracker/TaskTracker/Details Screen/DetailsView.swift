@@ -97,7 +97,7 @@ struct DetailsScreen: View {
                         .foregroundStyle(.black)
                 })
                 Button(action: {
-                    // TODO: Add confirmation pop-up for delete button #132
+                    // TODO: Add confirmation pop-up for cancel button #132
                 },
                        label: {
                     Image(systemName: "x.circle.fill")
