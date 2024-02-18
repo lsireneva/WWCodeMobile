@@ -1,13 +1,16 @@
 Fill out the sections of this PR template that applies.
 If your PR is documentation-based or is very short, you may skip the parts after requesting a reviewer
 
-## TODO: Give this PR a meaningful title
-* Should have the recommended format of:
-<iOS | Android>-issue-<issue number>-<issue-description-in-kebab-case-format>
+## TODO: If you haven't done so already, give your branch a meaningful name
+* [iOS | Android]-issue-[issue number]-[issue-description-in-kebab-case-format]
 * Example: iOS-issue-0123-add-submit-button-to-detail-screen
 
+## TODO: Give this PR a meaningful title
+* [iOS | Android] Issue #[issue number] [short issue description]
+* Example: iOS Issue #0123 Add Submit Button to Detail Screen
+
 ## TODO: Link the issue # to this PR
-* Example: Implements issue #ABCD (update with actual issue number)
+* Example: Implements issue #0123 (update with actual issue number)
 * See [how to reference issues in pull requests](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#referencing-issues-and-pull-requests)
 
 ## TODO: Request a maintainer to review your PR
