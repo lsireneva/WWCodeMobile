@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) private var context
     @ObservedObject var viewModel = DetailsViewModel()
     @State private var taskText: String = ""
     @State private var shouldDismiss: Bool = false
@@ -93,54 +92,7 @@ struct DetailsScreen: View {
                           showButton: $showCancelConfirmationPopup,
                           shouldDismiss: $shouldDismiss)
             }
-            
-            TextField("Enter your task", text: $taskText)
-                .padding()
-                .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
-                .border(.secondary)
-            
-//            ButtonSelectorView(descriptionText: "Start Time", buttonString: "TIME") {
-//                // Start time button method call
-//                // TODO: Add time pickers #130
-//            }
-//            
-//            ButtonSelectorView(descriptionText: "End Time", buttonString: "TIME") {
-//                // End time button method call
-//                // TODO: Add time pickers #130
-//            }
-            
-            Spacer()
-            
-            DoneButton(shouldDismiss: $shouldDismiss)
-            
-            Spacer()
         }
-        .padding()
-        .overlay(
-            RoundedRectangle(cornerRadius: 25)
-                .stroke(lineWidth: 3)
-                .foregroundStyle(.black))
-        .padding()
-        .cornerRadius(25)
-        .onChange(of: shouldDismiss) {
-            if shouldDismiss {
-                if viewModel.task != nil {
-                    viewModel.updateTask(name: taskText, date: taskDate, startTime: startTime, endTime: endTime)
-                    
-                }
-                
-                dismiss()
-            }
-        }
-        .onAppear() {
-            if let task = viewModel.task {
-                task.name = taskText
-                task.date = taskDate
-                task.startTime = startTime
-                task.endTime = endTime
-            }
-        }
-        
         Spacer()
     }
     
