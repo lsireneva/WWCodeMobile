@@ -62,6 +62,9 @@ struct DetailsScreen: View {
         .onChange(of: shouldDismiss) {
             if shouldDismiss {
                 dismiss()
+            // show popup on the whole screen
+            if $showDeleteConfirmationPopup.wrappedValue {
+                DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
             }
         }
         Spacer()
