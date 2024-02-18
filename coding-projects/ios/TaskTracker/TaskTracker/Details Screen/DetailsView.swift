@@ -12,6 +12,7 @@ struct DetailsScreen: View {
     @ObservedObject var viewModel = DetailsViewModel()
     @State private var taskText: String = ""
     @State private var shouldDismiss: Bool = false
+    @State private var showDeleteConfirmationPopup: Bool = false
 
     @State private var startTime = Date.now
     @State private var endTime = Date.now
@@ -31,6 +32,7 @@ struct DetailsScreen: View {
                 .padding()
                 .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
                 .border(.secondary)
+                TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
 
             DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
                 TextView(text: "Start Time")
@@ -66,12 +68,13 @@ struct DetailsScreen: View {
     }
     
     struct TopBarView: View {
-        
+        @Binding var showDeleteConfirmationPopup: Bool
+
         var body: some View {
             HStack(alignment: .lastTextBaseline, spacing: 16){
                 Spacer()
                 Button(action: {
-                    // TODO: Add confirmation pop-up for cancel button #131
+                    showDeleteConfirmationPopup = true
                 },
                        label: {
                     Image(systemName: "trash.circle")
