@@ -18,50 +18,50 @@ struct DetailsScreen: View {
     @State private var endTime = Date.now
 
     var body: some View {
-        VStack(spacing: 10) {
         ZStack {
             VStack(spacing: 10) {
 
-            TopBarView()
-            
-            ButtonSelectorView(descriptionText: "Date", buttonString: "Date") {
-                // TODO: Add date picker #129
-            }
-            
-            TextField("Enter your task", text: $taskText)
-                .padding()
-                .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
-                .border(.secondary)
                 TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
 
-            DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
-                TextView(text: "Start Time")
-            }
-            .datePickerStyle(.compact)
-            .padding([.leading, .trailing])
+                ButtonSelectorView(descriptionText: "Date", buttonString: "Date") {
+                    // TODO: Add date picker #129
+                }
+                
+                TextField("Enter your task", text: $taskText)
+                    .padding()
+                    .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
+                    .border(.secondary)
 
-            DatePicker(selection: $endTime, displayedComponents: .hourAndMinute) {
-                TextView(text: "End Time")
-            }
-            .datePickerStyle(.compact)
-            .padding([.leading, .trailing])
-            
-            Spacer()
-            
-            DoneButton(shouldDismiss: $shouldDismiss)
+                DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
+                    TextView(text: "Start Time")
+                }
+                .datePickerStyle(.compact)
+                .padding([.leading, .trailing])
 
-            Spacer()
+                DatePicker(selection: $endTime, displayedComponents: .hourAndMinute) {
+                    TextView(text: "End Time")
+                }
+                .datePickerStyle(.compact)
+                .padding([.leading, .trailing])
+                
+                Spacer()
+                
+                DoneButton(shouldDismiss: $shouldDismiss)
+
+                Spacer()
+            }
+            .padding()
+            .overlay(
+                RoundedRectangle(cornerRadius: 25)
+                    .stroke(lineWidth: 3)
+                    .foregroundStyle(.black))
+            .padding()
+            .cornerRadius(25)
+            .onChange(of: shouldDismiss) {
+                if shouldDismiss {
+                    dismiss()
+                }
         }
-        .padding()
-        .overlay(
-            RoundedRectangle(cornerRadius: 25)
-                .stroke(lineWidth: 3)
-                .foregroundStyle(.black))
-        .padding()
-        .cornerRadius(25)
-        .onChange(of: shouldDismiss) {
-            if shouldDismiss {
-                dismiss()
             // overlay for the whole screen
             .overlay(
                 ZStack {
@@ -74,6 +74,7 @@ struct DetailsScreen: View {
                     }
                 }
             )
+
             // show popup on the whole screen
             if $showDeleteConfirmationPopup.wrappedValue {
                 DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
