@@ -27,8 +27,11 @@ import androidx.compose.ui.unit.sp
 import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.data.model.Task
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
 
 /**
@@ -37,8 +40,11 @@ import com.example.tasktracker.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    viewModel: TaskListViewModel = viewModel(factory = TaskListViewModel.factory)
 ) {
+    val allTasks by viewModel.getAllTasks().collectAsState(emptyList())
+
     Scaffold(
         topBar = {
             ListScreenTopAppBar(
@@ -47,7 +53,7 @@ fun TaskListScreen(
         }
     ) {
         TaskList(
-            TaskRepository.tasks,
+            taskList = allTasks,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
@@ -57,9 +63,11 @@ fun TaskListScreen(
 
 @Composable
 fun TaskList(
-    tasks: List<Task>,
+    taskList: List<Task>,
     modifier: Modifier
 ) {
+    val taskItem = TaskItemView()
+
     LazyColumn(
         modifier = modifier
             .padding(dimensionResource(R.dimen.medium_padding)),
@@ -72,7 +80,7 @@ fun TaskList(
                 fontSize = 20.sp
             )
         }
-        val grouped = tasks.groupBy { it.date }
+        val grouped = taskList.groupBy { it.date }
 
         grouped.forEach { (date, tasks) ->
             item {
@@ -80,7 +88,7 @@ fun TaskList(
             }
 
             items(tasks) { task ->
-                TaskCard(
+                taskItem.TaskCard(
                     task = task,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -163,7 +171,14 @@ private fun TopAppBarPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun TaskListPreview() {
-    TaskList(TaskRepository.tasks, modifier = Modifier)
+    TaskList(
+        listOf(
+            Task(1, "Walking", "Yesterday", 0, 0, "01:35:08"),
+            Task(2, "finishing certifications", "Yesterday", 0, 0, "03:40:04"),
+            Task(3, "setting up new dryer unit", "December 19, Tuesday", 0, 0, "01:20:21"),
+            Task(4, "coding crunch time", "December 19, Tuesday", 0, 0, "09:30:10")
+        ),
+        modifier = Modifier)
 }
 
 @Preview(showBackground = true)
