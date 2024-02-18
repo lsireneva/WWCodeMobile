@@ -1,5 +1,10 @@
-Fill out the sections of this PR template that applies. 
+Fill out the sections of this PR template that applies.
 If your PR is documentation-based or is very short, you may skip the parts after requesting a reviewer
+
+## TODO: Give this PR a meaningful title
+* Should have the recommended format of:
+<iOS | Android>-issue-<issue number>-<issue-description-in-kebab-case-format>
+* Example: iOS-issue-0123-add-submit-button-to-detail-screen
 
 ## TODO: Link the issue # to this PR
 * Example: Implements issue #ABCD (update with actual issue number)
