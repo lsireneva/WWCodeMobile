@@ -18,6 +18,8 @@ struct DetailsScreen: View {
 
     var body: some View {
         VStack(spacing: 10) {
+        ZStack {
+            VStack(spacing: 10) {
 
             TopBarView()
             
