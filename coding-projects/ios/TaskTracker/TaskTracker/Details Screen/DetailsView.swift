@@ -17,9 +17,8 @@ struct DetailsScreen: View {
     @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
-
+    
     var body: some View {
-<<<<<<< HEAD
         ZStack {
             VStack(spacing: 10) {
                 
@@ -28,51 +27,6 @@ struct DetailsScreen: View {
                 
                 DatePicker(selection: $taskDate, displayedComponents: .date) {
                     LeftTitleText(text: "Date")
-=======
-        VStack(spacing: 10) {
-
-            TopBarView()
-            
-            ButtonSelectorView(descriptionText: "Date", buttonString: "Date") {
-                // TODO: Add date picker #129
-            }
-            
-            TextField("Enter your task", text: $taskText)
-                .padding()
-                .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
-                .border(.secondary)
-
-            DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
-                TextView(text: "Start Time")
-            }
-            .datePickerStyle(.compact)
-            .padding([.leading, .trailing])
-
-            DatePicker(selection: $endTime, displayedComponents: .hourAndMinute) {
-                TextView(text: "End Time")
-            }
-            .datePickerStyle(.compact)
-            .padding([.leading, .trailing])
-            
-            Spacer()
-            
-            DoneButton(shouldDismiss: $shouldDismiss)
-
-            Spacer()
-        }
-        .padding()
-        .overlay(
-            RoundedRectangle(cornerRadius: 25)
-                .stroke(lineWidth: 3)
-                .foregroundStyle(.black))
-        .padding()
-        .cornerRadius(25)
-        .onChange(of: shouldDismiss) {
-            if shouldDismiss {
-                if viewModel.task != nil {
-                    viewModel.updateTask(name: taskText, date: date, startTime: startTime, endTime: endTime)
-
->>>>>>> d4e2a13 ([iOS] [Issue 130] Add time picker)
                 }
                 .datePickerStyle(.compact)
                 .padding([.leading, .trailing])
@@ -168,7 +122,6 @@ struct DetailsScreen: View {
             .padding()
         }
     }
-<<<<<<< HEAD
     
     struct LeftTitleText: View {
         var text: String
@@ -179,49 +132,6 @@ struct DetailsScreen: View {
                 .font(.title)
                 .fontWeight(.medium)
                 .lineLimit(1)
-=======
-
-    struct TextView: View {
-        var text: String
-
-        var body: some View {
-            Text(text)
-                .textCase(.uppercase)
-                .font(.title)
-                .fontWeight(.medium)
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
-        }
-    }
-
-    struct ButtonSelectorView: View {
-        var descriptionText: String
-        @State var buttonString: String
-        var buttonAction: () -> Void
-        
-        init(descriptionText: String, buttonString: String, buttonAction: @escaping () -> Void) {
-            self.descriptionText = descriptionText
-            self.buttonString = buttonString
-            self.buttonAction = buttonAction
-        }
-        
-        var body: some View {
-            HStack {
-                TextView(text: descriptionText)
-                Spacer()
-                Button(action: {
-                    buttonAction()
-                },
-                       label: {
-                    Text(buttonString)
-                        .foregroundStyle(.white)
-                        .fontWeight(.medium)
-                })
-                .padding()
-                .frame(minWidth: 0, maxWidth: 120)
-                .border(Color.green, width: 3)
-                .background(.green)
->>>>>>> d4e2a13 ([iOS] [Issue 130] Add time picker)
                 .minimumScaleFactor(0.5)
         }
     }
