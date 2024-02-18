@@ -62,6 +62,18 @@ struct DetailsScreen: View {
         .onChange(of: shouldDismiss) {
             if shouldDismiss {
                 dismiss()
+            // overlay for the whole screen
+            .overlay(
+                ZStack {
+                    if showDeleteConfirmationPopup {
+                        Color.black.opacity(0.5)
+                            .edgesIgnoringSafeArea(.all)
+                            .onTapGesture {
+                                showDeleteConfirmationPopup = false
+                            }
+                    }
+                }
+            )
             // show popup on the whole screen
             if $showDeleteConfirmationPopup.wrappedValue {
                 DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
