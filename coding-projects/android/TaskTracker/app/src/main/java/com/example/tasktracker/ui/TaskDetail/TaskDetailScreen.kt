@@ -216,14 +216,14 @@ class TaskDetailScreen {
                 Button(
                     onClick = { onConfirm() }
                 ) {
-                    Text(text = "Ok")
+                    Text(text = stringResource(id = R.string.ok))
                 }
             },
             dismissButton = {
                 Button(
                     onClick = { onCancel() }
                 ) {
-                    Text(text = "Cancel")
+                    Text(text = stringResource(id = R.string.cancel))
                 }
             }
         )
