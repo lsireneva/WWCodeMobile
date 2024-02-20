@@ -2,6 +2,7 @@ Recommendations for writing a good issue:
 
 ## Give this issue a meaningful title
 * [Android | iOS] - [Short Description]
+* Example: Android - UI- Add Delete Button to Detail Screen
 * Example: iOS - UI - Add Submit Button to Detail Screen
 
 ## Add more details to describe what needs to be done. Include wireframes if applicable.
