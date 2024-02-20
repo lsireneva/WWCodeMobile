@@ -8,7 +8,7 @@ Recommendations for writing a good issue:
 ## Add more details to describe what needs to be done. Include wireframes if applicable.
 
 ## If a PR already exists, link it to this issue
-* [See how to manually link the pull request to the issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue#manually-linking-a-pull-request-to-an-issue-using-the-pull-request-sidebar)
+* See [how to manually link the pull request to the issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue#manually-linking-a-pull-request-to-an-issue-using-the-pull-request-sidebar)
 
 ## Get yourself assigned to this issue
 * If you want to work on this issue, request to have it be assigned to you by:
