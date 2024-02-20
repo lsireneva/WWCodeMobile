@@ -12,8 +12,9 @@ If your PR is documentation-based or is very short, you may skip the parts after
 * Example: iOS Issue #0123 Add Submit Button to Detail Screen
 
 ## Link the issue # to this PR
-* Example: Implements issue #0123 (update with actual issue number)
+* Example: closes issue #0123 (update with actual issue number)
 * See [how to reference issues in pull requests](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#referencing-issues-and-pull-requests)
+* See [how to link issues and pull requests](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)
 
 ## Request a maintainer to review your PR
 * [Request a maintainer of your project to review your PR](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/requesting-a-pull-request-review)
