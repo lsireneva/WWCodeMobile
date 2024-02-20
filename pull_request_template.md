@@ -2,11 +2,13 @@ Fill out the sections of this PR template that applies.
 If your PR is documentation-based or is very short, you may skip the parts after requesting a reviewer
 
 ## TODO: If you haven't done so already, give your branch a meaningful name
-* [iOS | Android]-issue-[issue number]-[issue-description-in-kebab-case-format]
+* [Android | iOS]-issue-[issue number]-[issue-description-in-kebab-case-format]
+* Example: Android-issue-0012-add-delete-button-to-detail-screen
 * Example: iOS-issue-0123-add-submit-button-to-detail-screen
 
 ## TODO: Give this PR a meaningful title
-* [iOS | Android] Issue #[issue number] [short issue description]
+* [Android | iOS] Issue #[issue number] [short issue description]
+* Example: Android Issue #0012 Add Delete Button to Detail Screen
 * Example: iOS Issue #0123 Add Submit Button to Detail Screen
 
 ## TODO: Link the issue # to this PR
