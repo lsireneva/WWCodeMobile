@@ -12,6 +12,7 @@ struct DetailsScreen: View {
     @ObservedObject var viewModel = DetailsViewModel()
     @State private var taskText: String = ""
     @State private var shouldDismiss: Bool = false
+    @State private var taskDate = Date.now
 
     @State private var startTime = Date.now
     @State private var endTime = Date.now
@@ -20,10 +21,11 @@ struct DetailsScreen: View {
         VStack(spacing: 10) {
 
             TopBarView()
-            
-            ButtonSelectorView(descriptionText: "Date", buttonString: "Date") {
-                // TODO: Add date picker #129
+            DatePicker(selection: $taskDate, displayedComponents: .date) {
+                LeftTitleText(text: "Date")
             }
+            .datePickerStyle(.compact)
+            .padding([.leading, .trailing])
             
             TextField("Enter your task", text: $taskText)
                 .padding()
@@ -31,13 +33,13 @@ struct DetailsScreen: View {
                 .border(.secondary)
 
             DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
-                TextView(text: "Start Time")
+                LeftTitleText(text: "Start Time")
             }
             .datePickerStyle(.compact)
             .padding([.leading, .trailing])
 
             DatePicker(selection: $endTime, displayedComponents: .hourAndMinute) {
-                TextView(text: "End Time")
+                LeftTitleText(text: "End Time")
             }
             .datePickerStyle(.compact)
             .padding([.leading, .trailing])
@@ -88,7 +90,7 @@ struct DetailsScreen: View {
         }
     }
 
-    struct TextView: View {
+    struct LeftTitleText: View {
         var text: String
 
         var body: some View {
@@ -98,40 +100,6 @@ struct DetailsScreen: View {
                 .fontWeight(.medium)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
-        }
-    }
-
-    struct ButtonSelectorView: View {
-        var descriptionText: String
-        @State var buttonString: String
-        var buttonAction: () -> Void
-        
-        init(descriptionText: String, buttonString: String, buttonAction: @escaping () -> Void) {
-            self.descriptionText = descriptionText
-            self.buttonString = buttonString
-            self.buttonAction = buttonAction
-        }
-        
-        var body: some View {
-            HStack {
-                TextView(text: descriptionText)
-                Spacer()
-                Button(action: {
-                    buttonAction()
-                },
-                       label: {
-                    Text(buttonString)
-                        .foregroundStyle(.white)
-                        .fontWeight(.medium)
-                })
-                .padding()
-                .frame(minWidth: 0, maxWidth: 120)
-                .border(Color.green, width: 3)
-                .background(.green)
-                .minimumScaleFactor(0.5)
-                
-            }
-            .padding()
         }
     }
     
