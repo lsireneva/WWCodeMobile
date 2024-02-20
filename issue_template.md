@@ -1,7 +1,7 @@
 Recommendations for writing a good issue:
 
 ## Give this issue a meaningful title
-* [iOS | Android] - [Short Description]
+* [Android | iOS] - [Short Description]
 * Example: iOS - UI - Add Submit Button to Detail Screen
 
 ## Add more details to describe what needs to be done. Include wireframes if applicable.
