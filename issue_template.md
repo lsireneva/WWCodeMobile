@@ -1,15 +1,15 @@
 Recommendations for writing a good issue:
 
-## TODO: Give this issue a meaningful title
+## Give this issue a meaningful title
 * [iOS | Android] - [Short Description]
 * Example: iOS - UI - Add Submit Button to Detail Screen
 
-## TODO: Add more details to describe what needs to be done. Include wireframes if applicable.
+## Add more details to describe what needs to be done. Include wireframes if applicable.
 
-## TODO: If a PR already exists, link it to this issue
+## If a PR already exists, link it to this issue
 * Do this under the Development setting gear (on the right)
 
-## TODO: Get yourself assigned to this issue
+## Get yourself assigned to this issue
 * If you want to work on this issue, request to have it be assigned to you by:
 1. Add a comment that you want to work on the issue
 2. Tag a maintainer to request assignment
