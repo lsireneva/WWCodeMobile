@@ -14,6 +14,7 @@ struct DetailsScreen: View {
     @State private var shouldDismiss: Bool = false
     @State private var taskDate = Date.now
     @State private var showDeleteConfirmationPopup: Bool = false
+    @State var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
 
@@ -21,7 +22,8 @@ struct DetailsScreen: View {
         ZStack {
             VStack(spacing: 10) {
 
-                TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
+                TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup,
+                           showCancelConfirmationPopup: $showCancelConfirmationPopup)
 
                 DatePicker(selection: $taskDate, displayedComponents: .date) {
                     LeftTitleText(text: "Date")
@@ -67,11 +69,12 @@ struct DetailsScreen: View {
             // overlay for the whole screen
             .overlay(
                 ZStack {
-                    if showDeleteConfirmationPopup {
+                    if showDeleteConfirmationPopup || showCancelConfirmationPopup {
                         Color.black.opacity(0.5)
                             .edgesIgnoringSafeArea(.all)
                             .onTapGesture {
                                 showDeleteConfirmationPopup = false
+                                showCancelConfirmationPopup = false
                             }
                     }
                 }
@@ -81,12 +84,21 @@ struct DetailsScreen: View {
             if $showDeleteConfirmationPopup.wrappedValue {
                 DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
             }
+            
+            if $showCancelConfirmationPopup.wrappedValue {
+                PopupView(text: "You have unsaved data. Are you sure you want to close without saving?",
+                          firstButtonText: "Ok",
+                          secondButtonText: "Cancel",
+                          showButton: $showCancelConfirmationPopup,
+                          shouldDismiss: $shouldDismiss)
+            }
         }
         Spacer()
     }
     
     struct TopBarView: View {
         @Binding var showDeleteConfirmationPopup: Bool
+        @Binding var showCancelConfirmationPopup: Bool
 
         var body: some View {
             HStack(alignment: .lastTextBaseline, spacing: 16){
@@ -99,7 +111,7 @@ struct DetailsScreen: View {
                         .foregroundStyle(.black)
                 })
                 Button(action: {
-                    // TODO: Add confirmation pop-up for cancel button #132
+                    showCancelConfirmationPopup = true
                 },
                        label: {
                     Image(systemName: "x.circle.fill")
@@ -191,6 +203,84 @@ struct DetailsScreen: View {
 
         }
     }
+    
+    struct PopupView: View {
+        
+        let text: String
+        let firstButtonText: String
+        let secondButtonText: String?
+        @Binding var showButton: Bool
+        @Binding var shouldDismiss: Bool
+        
+        init(text: String, firstButtonText: String, secondButtonText: String?, showButton: Binding<Bool>, shouldDismiss: Binding<Bool>) {
+            self.text = text
+            self.firstButtonText = firstButtonText
+            self.secondButtonText = secondButtonText
+            _showButton = showButton
+            _shouldDismiss = shouldDismiss
+        }
+        
+        var body: some View {
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        showButton.toggle()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundStyle(.black)
+                    }
+                }
+                Text(text)
+                    .dynamicTypeSize(.large)
+                    .multilineTextAlignment(.center)
+                    .padding()
+
+                HStack {
+                    Button {
+                        shouldDismiss.toggle()
+                    } label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 4)
+                                .foregroundStyle(.gray)
+                            Text(firstButtonText)
+                                .foregroundStyle(.white)
+                                .dynamicTypeSize(.medium)
+                                .fontWeight(.medium)
+                                .padding()
+                        }
+                        .padding()
+                        .frame(minWidth: 0, maxWidth: 165, minHeight: 0, maxHeight: 60)
+                    }
+                    if let secondButtonText {
+                        Button {
+                            showButton.toggle()
+                        } label: {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .foregroundStyle(.gray)
+                                Text(secondButtonText)
+                                    .foregroundStyle(.white)
+                                    .dynamicTypeSize(.medium)
+                                    .fontWeight(.medium)
+                                    .padding()
+                            }
+                            .padding()
+                            .frame(minWidth: 0, maxWidth: 165, minHeight: 0, maxHeight: 60)
+                        }
+                    }
+                }
+            }
+            .padding(20)
+            .background(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .shadow(radius: 5)
+            .frame(minWidth: 0, maxWidth: 350, minHeight: 0, maxHeight: 350)
+        }
+        
+    }
+
 }
 
 #Preview {
