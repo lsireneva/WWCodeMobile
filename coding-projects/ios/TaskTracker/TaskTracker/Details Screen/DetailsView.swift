@@ -14,7 +14,7 @@ struct DetailsScreen: View {
     @State private var shouldDismiss: Bool = false
     @State private var taskDate = Date.now
     @State private var showDeleteConfirmationPopup: Bool = false
-    @State var showCancelConfirmationPopup: Bool = false
+    @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
 
@@ -211,6 +211,7 @@ struct DetailsScreen: View {
         let secondButtonText: String?
         @Binding var showButton: Bool
         @Binding var shouldDismiss: Bool
+        @State private var offset: CGFloat = 1000
         
         init(text: String, firstButtonText: String, secondButtonText: String?, showButton: Binding<Bool>, shouldDismiss: Binding<Bool>) {
             self.text = text
@@ -277,6 +278,12 @@ struct DetailsScreen: View {
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 5)
             .frame(minWidth: 0, maxWidth: 350, minHeight: 0, maxHeight: 350)
+            .offset(x: 0, y: offset)
+            .onAppear {
+                withAnimation(.spring()) {
+                    offset = 0
+                }
+            }
         }
         
     }
