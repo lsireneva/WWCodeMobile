@@ -21,7 +21,6 @@ struct DetailsScreen: View {
         ZStack {
             VStack(spacing: 10) {
 
-
                 TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
 
                 DatePicker(selection: $taskDate, displayedComponents: .date) {
