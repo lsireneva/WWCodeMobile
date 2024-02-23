@@ -50,10 +50,14 @@ struct SettingsView: View {
                         .fontWeight(.bold)
                 }
 
-                // TODO: Add Section Header: Appearance #108
                 Section {
                     ThemeView()
                     // TODO: App Icon #117
+                } header: {
+                    Label("Appearance",
+                          systemImage: "paintpalette")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
                 }
 
             }
