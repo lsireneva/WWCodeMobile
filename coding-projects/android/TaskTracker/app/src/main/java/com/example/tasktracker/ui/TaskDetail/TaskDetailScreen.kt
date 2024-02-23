@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -46,143 +47,200 @@ import com.example.tasktracker.ui.theme.Green
  * Screen to display task details and add, edit or delete task
  * Developed compose UI by Liubov Sireneva on 1/29/24
  */
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun TaskDetailScreen(onNavigateToList: () -> Unit) {
+        val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember { mutableStateOf(false) }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TaskDetailScreen() {
-    OutlinedCard(
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
-        border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Color.Black),
-        modifier = Modifier
-            .padding(dimensionResource(R.dimen.medium_padding))
-            .wrapContentSize()
-            .verticalScroll(rememberScrollState()),
-        shape = RoundedCornerShape(dimensionResource(R.dimen.detail_card_shape))
+        // Function to handle cancel confirmation
+        val onCancelConfirmed = {
+            setShowCancelConfirmationPopup(false)
+            onNavigateToList()
+        }
+        OutlinedCard(
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White,
+            ),
+            border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Color.Black),
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.medium_padding))
+                .wrapContentSize()
+                .verticalScroll(rememberScrollState()),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.detail_card_shape))
 
-    ) {
-        val dateInfo =
-            "JAN 29 2024" //these values should be changed, it needs to be get from ViewModel
-        val startTimeInfo = "08:22:10"
-        val endTimeInfo = "09:12:01"
+        ) {
+            val dateInfo =
+                "JAN 29 2024" //these values should be changed, it needs to be get from ViewModel
+            val startTimeInfo = "08:22:10"
+            val endTimeInfo = "09:12:01"
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.medium_padding)),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_delete_24),
+                        contentDescription = stringResource(id = R.string.delete),
+                    )
+                }
+                CancelButton(onClick = { setShowCancelConfirmationPopup(true) })
+            }
+
+            if (showCancelConfirmationPopup) {
+                ConfirmationDialog(
+                    message = stringResource(id = R.string.cancel_popup_message),
+                    onConfirm = onCancelConfirmed,
+                    onCancel = { setShowCancelConfirmationPopup(false) }
+                )
+            }
+
+            LabelButtonRow(
+                label = stringResource(id = R.string.date_label).uppercase(),
+                buttonInfo = dateInfo
+            ) {}
+            var textState by remember { mutableStateOf("") }
+
+            TextField(
+                value = textState,
+                onValueChange = { textState = it },
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.medium_padding))
+                    .fillMaxWidth()
+                    .sizeIn(minHeight = dimensionResource(R.dimen.detail_textfield_min_height))
+                    .border(
+                        dimensionResource(R.dimen.detail_border_thickness),
+                        Color.Gray,
+                        RoundedCornerShape(5)
+                    ),
+                label = { Text(text = stringResource(id = R.string.textfield_label)) },
+                maxLines = 20,
+                colors = TextFieldDefaults.textFieldColors(
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = Color.Gray,
+                    focusedLabelColor = Color.Gray,
+                    textColor = Color.Black,
+                    containerColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+            )
+
+            LabelButtonRow(
+                label = stringResource(id = R.string.start_time_label).uppercase(),
+                buttonInfo = startTimeInfo
+            ) {}
+            LabelButtonRow(
+                label = stringResource(id = R.string.end_time_label).uppercase(),
+                buttonInfo = endTimeInfo
+            ) {}
+
+            OutlinedButton(
+                onClick = { },
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = Color.White, contentColor = Green
+                ),
+                border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Green),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(
+                        top = dimensionResource(R.dimen.detail_done_button_padding),
+                        bottom = dimensionResource(R.dimen.small_padding)
+                    ),
+                contentPadding = PaddingValues(
+                    horizontal = dimensionResource(R.dimen.detail_done_button_inside_padding),
+                    vertical = dimensionResource(R.dimen.small_padding)
+                )
+            ) {
+                Text(text = stringResource(id = R.string.done).uppercase())
+            }
+        }
+    }
+
+    @Composable
+    fun LabelButtonRow(label: String, buttonInfo: String, onClick: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.medium_padding)),
-            horizontalArrangement = Arrangement.End
-        ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.outline_delete_24),
-                    contentDescription = stringResource(id = R.string.delete),
-                )
-            }
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_cancel_24),
-                    contentDescription = stringResource(id = R.string.cancel),
-                    tint = Color.Red
-                )
-            }
-        }
-
-        LabelButtonRow(
-            label = stringResource(id = R.string.date_label).uppercase(),
-            buttonInfo = dateInfo
-        ) {}
-        var textState by remember { mutableStateOf("") }
-
-        TextField(
-            value = textState,
-            onValueChange = { textState = it },
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.medium_padding))
-                .fillMaxWidth()
-                .sizeIn(minHeight = dimensionResource(R.dimen.detail_textfield_min_height))
-                .border(
-                    dimensionResource(R.dimen.detail_border_thickness),
-                    Color.Gray,
-                    RoundedCornerShape(5)
-                ),
-            label = { Text(text = stringResource(id = R.string.textfield_label)) },
-            maxLines = 20,
-            colors = TextFieldDefaults.textFieldColors(
-                unfocusedLabelColor = Color.Gray,
-                cursorColor = Color.Gray,
-                focusedLabelColor = Color.Gray,
-                textColor = Color.Black,
-                containerColor = Color.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-        )
-
-        LabelButtonRow(
-            label = stringResource(id = R.string.start_time_label).uppercase(),
-            buttonInfo = startTimeInfo
-        ) {}
-        LabelButtonRow(
-            label = stringResource(id = R.string.end_time_label).uppercase(),
-            buttonInfo = endTimeInfo
-        ) {}
-
-        OutlinedButton(
-            onClick = { },
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = Color.White, contentColor = Green
-            ),
-            border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Green),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
                 .padding(
-                    top = dimensionResource(R.dimen.detail_done_button_padding),
-                    bottom = dimensionResource(R.dimen.small_padding)
+                    horizontal = dimensionResource(R.dimen.medium_padding),
+                    vertical = dimensionResource(R.dimen.small_padding)
                 ),
-            contentPadding = PaddingValues(
-                horizontal = dimensionResource(R.dimen.detail_done_button_inside_padding),
-                vertical = dimensionResource(R.dimen.small_padding)
-            )
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = stringResource(id = R.string.done).uppercase())
+            Text(
+                text = label,
+                modifier = Modifier.align(Alignment.CenterVertically),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Button(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                shape = RoundedCornerShape(dimensionResource(R.dimen.detail_button_corner_shape)),
+                onClick = onClick,
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = Green, contentColor = Color.White
+                )
+            ) {
+                Text(text = buttonInfo, fontSize = 12.sp)
+            }
         }
     }
-}
 
-@Composable
-fun LabelButtonRow(label: String, buttonInfo: String, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = dimensionResource(R.dimen.medium_padding),
-                vertical = dimensionResource(R.dimen.small_padding)
-            ),
-        horizontalArrangement = Arrangement.SpaceBetween
+    @Composable
+    fun CancelButton(onClick: () -> Unit) {
+        IconButton(onClick = onClick) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_cancel_24),
+                contentDescription = stringResource(id = R.string.cancel),
+                tint = Color.Red
+            )
+        }
+    }
+
+    @Composable
+    fun ConfirmationDialog(
+        message: String,
+        onConfirm: () -> Unit,
+        onCancel: () -> Unit
     ) {
-        Text(
-            text = label,
-            modifier = Modifier.align(Alignment.CenterVertically),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+        AlertDialog(
+            onDismissRequest = onCancel,
+            text = { Text(text = message) },
+            confirmButton = {
+                Button(
+                    onClick = { onConfirm() }
+                ) {
+                    Text(text = stringResource(id = R.string.ok))
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { onCancel() }
+                ) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
+            }
         )
-
-        Button(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            shape = RoundedCornerShape(dimensionResource(R.dimen.detail_button_corner_shape)),
-            onClick = onClick,
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = Green, contentColor = Color.White
-            )
-        ) {
-            Text(text = buttonInfo, fontSize = 12.sp)
-        }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun TaskDetailScreenPreview() {
-    TaskDetailScreen()
-}
+
+    @Preview(showBackground = true)
+    @Composable
+    fun TaskDetailScreenPreview() {
+        TaskDetailScreen(onNavigateToList = {})
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun ConfirmationDialogPreview() {
+        ConfirmationDialog(
+            message = stringResource(id = R.string.cancel_popup_message),
+            onConfirm = {  },
+            onCancel = {  }
+        )
+    }
+
