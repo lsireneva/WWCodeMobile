@@ -21,7 +21,6 @@ import com.example.tasktracker.data.model.Task
 /**
  * Created by Gauri Gadkari on 1/23/24.
  */
-class TaskItemView {
     @Composable
     fun TaskCard(task: Task, modifier: Modifier = Modifier) {
         Card(modifier = modifier
@@ -63,5 +62,4 @@ class TaskItemView {
     }
 
 
-}
 

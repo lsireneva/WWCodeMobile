@@ -66,8 +66,6 @@ fun TaskList(
     taskList: List<Task>,
     modifier: Modifier
 ) {
-    val taskItem = TaskItemView()
-
     LazyColumn(
         modifier = modifier
             .padding(dimensionResource(R.dimen.medium_padding)),
@@ -88,7 +86,7 @@ fun TaskList(
             }
 
             items(tasks) { task ->
-                taskItem.TaskCard(
+                TaskCard(
                     task = task,
                     modifier = Modifier
                         .fillMaxWidth()
