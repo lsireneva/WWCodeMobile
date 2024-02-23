@@ -17,14 +17,14 @@ struct DetailsScreen: View {
     @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
-
+    
     var body: some View {
         ZStack {
             VStack(spacing: 10) {
-
+                
                 TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup,
                            showCancelConfirmationPopup: $showCancelConfirmationPopup)
-
+                
                 DatePicker(selection: $taskDate, displayedComponents: .date) {
                     LeftTitleText(text: "Date")
                 }
@@ -35,13 +35,13 @@ struct DetailsScreen: View {
                     .padding()
                     .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
                     .border(.secondary)
-
+                
                 DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
                     LeftTitleText(text: "Start Time")
                 }
                 .datePickerStyle(.compact)
                 .padding([.leading, .trailing])
-
+                
                 DatePicker(selection: $endTime, displayedComponents: .hourAndMinute) {
                     LeftTitleText(text: "End Time")
                 }
@@ -51,7 +51,7 @@ struct DetailsScreen: View {
                 Spacer()
                 
                 DoneButton(shouldDismiss: $shouldDismiss)
-
+                
                 Spacer()
             }
             .padding()
@@ -65,7 +65,7 @@ struct DetailsScreen: View {
                 if shouldDismiss {
                     dismiss()
                 }
-        }
+            }
             // overlay for the whole screen
             .overlay(
                 ZStack {
@@ -79,14 +79,14 @@ struct DetailsScreen: View {
                     }
                 }
             )
-
+            
             // show popup on the whole screen
             if $showDeleteConfirmationPopup.wrappedValue {
                 DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
             }
             
             if $showCancelConfirmationPopup.wrappedValue {
-                PopupView(text: "You have unsaved data. Are you sure you want to close without saving?",
+                PopUpView(text: "You have unsaved data. Are you sure you want to close without saving?",
                           firstButtonText: "Ok",
                           secondButtonText: "Cancel",
                           showButton: $showCancelConfirmationPopup,
@@ -99,7 +99,7 @@ struct DetailsScreen: View {
     struct TopBarView: View {
         @Binding var showDeleteConfirmationPopup: Bool
         @Binding var showCancelConfirmationPopup: Bool
-
+        
         var body: some View {
             HStack(alignment: .lastTextBaseline, spacing: 16){
                 Spacer()
@@ -122,10 +122,10 @@ struct DetailsScreen: View {
             .padding()
         }
     }
-
+    
     struct LeftTitleText: View {
         var text: String
-
+        
         var body: some View {
             Text(text)
                 .textCase(.uppercase)
@@ -138,7 +138,7 @@ struct DetailsScreen: View {
     
     struct DoneButton: View {
         @Binding var shouldDismiss: Bool
-
+        
         var body: some View {
             Button("Done") {
                 shouldDismiss = true
@@ -154,11 +154,11 @@ struct DetailsScreen: View {
             .cornerRadius(25)
         }
     }
-
+    
     private struct DeleteConfirmationPopupView: View {
         @Environment(\.presentationMode) var presentationMode
         @Binding var showDeleteConfirmationPopup: Bool
-
+        
         var body: some View {
             ZStack {
                 VStack {
@@ -166,7 +166,7 @@ struct DetailsScreen: View {
                         .multilineTextAlignment(.center)
                         .font(.title2)
                         .padding()
-
+                    
                     HStack {
                         Button("Ok") {
                             // TODO: Delete Timed Activity #80
@@ -179,10 +179,10 @@ struct DetailsScreen: View {
                         .background(.gray)
                         .foregroundColor(.white)
                         .cornerRadius(5)
-
-
+                        
+                        
                         .padding()
-
+                        
                         Button("Cancel") {
                             self.showDeleteConfirmationPopup = false
                         }
@@ -200,94 +200,9 @@ struct DetailsScreen: View {
             .frame(width: 300, height: 200)
             .cornerRadius(20)
             .shadow(radius: 20)
-
-        }
-    }
-    
-    struct PopupView: View {
-        
-        let text: String
-        let firstButtonText: String
-        let secondButtonText: String?
-        @Binding var showButton: Bool
-        @Binding var shouldDismiss: Bool
-        @State private var offset: CGFloat = 1000
-        
-        init(text: String, firstButtonText: String, secondButtonText: String?, showButton: Binding<Bool>, shouldDismiss: Binding<Bool>) {
-            self.text = text
-            self.firstButtonText = firstButtonText
-            self.secondButtonText = secondButtonText
-            _showButton = showButton
-            _shouldDismiss = shouldDismiss
-        }
-        
-        var body: some View {
             
-            VStack {
-                HStack {
-                    Spacer()
-                    Button {
-                        showButton.toggle()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .foregroundStyle(.black)
-                    }
-                }
-                Text(text)
-                    .dynamicTypeSize(.large)
-                    .multilineTextAlignment(.center)
-                    .padding()
-
-                HStack {
-                    Button {
-                        shouldDismiss.toggle()
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 4)
-                                .foregroundStyle(.gray)
-                            Text(firstButtonText)
-                                .foregroundStyle(.white)
-                                .dynamicTypeSize(.medium)
-                                .fontWeight(.medium)
-                                .padding()
-                        }
-                        .padding()
-                        .frame(minWidth: 0, maxWidth: 165, minHeight: 0, maxHeight: 60)
-                    }
-                    if let secondButtonText {
-                        Button {
-                            showButton.toggle()
-                        } label: {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .foregroundStyle(.gray)
-                                Text(secondButtonText)
-                                    .foregroundStyle(.white)
-                                    .dynamicTypeSize(.medium)
-                                    .fontWeight(.medium)
-                                    .padding()
-                            }
-                            .padding()
-                            .frame(minWidth: 0, maxWidth: 165, minHeight: 0, maxHeight: 60)
-                        }
-                    }
-                }
-            }
-            .padding(20)
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .shadow(radius: 5)
-            .frame(minWidth: 0, maxWidth: 350, minHeight: 0, maxHeight: 350)
-            .offset(x: 0, y: offset)
-            .onAppear {
-                withAnimation(.spring()) {
-                    offset = 0
-                }
-            }
         }
-        
     }
-
 }
 
 #Preview {
