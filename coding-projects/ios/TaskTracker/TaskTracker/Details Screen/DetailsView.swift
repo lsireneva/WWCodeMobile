@@ -214,5 +214,5 @@ struct DetailsScreen: View {
 }
 
 #Preview {
-    DetailsScreen()
+    DetailsScreen(task: nil)
 }
