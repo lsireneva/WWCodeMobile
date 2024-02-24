@@ -92,7 +92,7 @@ class TaskDetailScreen {
                 }
             }
 
-            DetailDatePickerDialog()
+            DetailDateButton()
 
             var textState by remember { mutableStateOf("") }
 
@@ -154,7 +154,7 @@ class TaskDetailScreen {
     }
 
     @Composable
-    fun DetailDatePickerDialog() {
+    fun DetailDateButton() {
         var date by remember {
             mutableStateOf(
                 SimpleDateFormat(
@@ -164,17 +164,12 @@ class TaskDetailScreen {
             )
         }
 
-        var showDatePicker by remember {
-            mutableStateOf(false)
-        }
+        var showDatePicker by remember { mutableStateOf(false) }
 
         LabelButtonRow(
             label = stringResource(id = R.string.date_label).uppercase(),
             buttonInfo = date
-        ) {
-            showDatePicker = true
-
-        }
+        ) { showDatePicker = true }
 
         if (showDatePicker) {
             DetailDatePickerDialog(
@@ -218,9 +213,7 @@ class TaskDetailScreen {
                 }
             }
         ) {
-            DatePicker(
-                state = datePickerState
-            )
+            DatePicker(state = datePickerState)
         }
     }
 
