@@ -35,9 +35,8 @@ struct SettingsView: View {
                 
                 Section {
                     DaysView()
-
-                    // TODO: Add Task Reminder Row (with toggle) #118
                     ShowBadgeView()
+                    ReminderNotificationView()
                     ReminderTimeView()
                 }
 
@@ -205,6 +204,19 @@ private struct ReminderTimeView: View {
             Text("Reminder Time")
             Spacer()
             Text("7:00 PM")
+        }
+    }
+}
+
+private struct ReminderNotificationView: View {
+    @State private var canNotify = false
+
+    var body: some View {
+        HStack{
+            Text("Send notification")
+            Spacer()
+            Toggle(isOn: $canNotify) {}
+                .tint(.purple)
         }
     }
 }
