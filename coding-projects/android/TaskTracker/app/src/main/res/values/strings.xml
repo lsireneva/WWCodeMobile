@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Task Tracker</string>
+    <string name="settings">Settings</string>
+    <string name="timer">Timer</string>
+    <string name="activity_heading">Your Activity</string>
+    <string name="date_label">date</string>
+    <string name="start_time_label">start time</string>
+    <string name="end_time_label">end time</string>
+    <string name="done">done</string>
+    <string name="textfield_label">Today I worked on ...</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

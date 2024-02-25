@@ -11,31 +11,43 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                // TODO: Add Section Header: Info and Feedback #105
                 // TODO: Add version number footer #122
                 Section {
-                    // TODO: Add About us row #109
-                    // TODO: Add Privacy Policy row #110
+                    AboutUsView()
+                    PrivacyView()
                     // TODO: Add Tutorial row #111
                     RateAppView()
-                    
-                    
-                    // TODO: Add follow us on twitter row #113
+                    FollowOnTwitterView()
+                } header: {
+                    Label("Info & Feedback", systemImage: "info.bubble.fill")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
                 }
 
-                // TODO: Add Section Header: Notifications #106
+                Section {
+                    
+                } header: {
+                    Label("Notifications", systemImage:
+                        "bell.fill")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                }
+                
                 Section {
                     DaysView()
 
                     // TODO: Add Task Reminder Row (with toggle) #118
-                    // TODO: Add Show Badge Row (with toggle) #119
+                    ShowBadgeView()
                     ReminderTimeView()
                 }
 
-                // TODO: Add Section Header: What's New #107
                 Section {
-                    // TODO: Add version 1.0 row #114
+                    VersionView()
                     // TODO: Add vote on future requests row #115
+                } header: {
+                    Label("What's New", systemImage: "wand.and.stars")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
                 }
 
                 // TODO: Add Section Header: Appearance #108
@@ -46,6 +58,36 @@ struct SettingsView: View {
 
             }
             .navigationBarTitle("Settings")
+        }
+    }
+}
+
+private struct AboutUsView: View {
+    
+    var body: some View {
+        HStack{
+            Image(systemName: "info.circle.fill")
+                .foregroundColor(.purple)
+                .font(Font.body.weight(.regular))
+                .imageScale(.large)
+            Text("About Us")
+            Spacer()
+            Image(systemName: "chevron.right")
+        }
+    }
+}
+
+private struct PrivacyView: View {
+
+    var body: some View {
+        HStack{
+            Image(systemName: "lock.shield.fill")
+                .foregroundColor(.purple)
+                .font(Font.body.weight(.regular))
+                .imageScale(.large)
+            Text("Privacy Policy")
+            Spacer()
+            Image(systemName: "chevron.right")
         }
     }
 }
@@ -73,6 +115,21 @@ private struct DaysView: View {
     }
 }
 
+private struct VersionView: View {
+    let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    var body: some View {
+        HStack{
+            Image(systemName: "iphone.gen2.circle")
+                .foregroundColor(.purple)
+                .font(Font.body.weight(.regular))
+                .imageScale(.large)
+            Text("Version " + appVersion)
+            Spacer()
+            Image(systemName: "chevron.right")
+        }
+    }
+}
+
 private struct RateAppView: View {
     
     var body: some View {
@@ -88,6 +145,33 @@ private struct RateAppView: View {
     }
 }
 
+private struct FollowOnTwitterView: View {
+    
+    var body: some View {
+        HStack {
+            // Image Credit: Freepik @ Flaticon https://www.flaticon.com/free-icon/twitter_5968958
+            Image("twitter")
+                .resizable()
+                .renderingMode(.template)
+                .foregroundColor(.purple)
+                .scaledToFit()
+                .frame(width: 20)
+                .padding(.horizontal, 3.5)
+            Text("Follow Us on Twitter")
+            Spacer()
+            
+            Link(destination:
+                URL(string: "https://twitter.com/WomenWhoCode")!)
+            {
+                Image(systemName: "arrow.up.right.square")
+                    .padding(.horizontal, -5)
+                    .font(.system(size: 20))
+            }
+                .foregroundColor(.black)
+        }
+    }
+}
+
 
 private struct ThemeView: View {
     var body: some View {
@@ -99,6 +183,18 @@ private struct ThemeView: View {
             Text("App Theme")
             Spacer()
             Image(systemName: "chevron.right")
+        }
+    }
+}
+
+private struct ShowBadgeView: View {
+    @State private var showBadge = true
+    var body: some View {
+        HStack {
+            Text("Show Badge")
+            Spacer()
+            Toggle(isOn: $showBadge) {}
+                .tint(.purple)
         }
     }
 }
