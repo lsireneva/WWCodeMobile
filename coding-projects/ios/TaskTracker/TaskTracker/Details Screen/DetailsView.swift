@@ -17,7 +17,9 @@ struct DetailsScreen: View {
     @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
-    
+
+    let task: Task?
+
     var body: some View {
         ZStack {
             VStack(spacing: 10) {
@@ -65,6 +67,12 @@ struct DetailsScreen: View {
                 if shouldDismiss {
                     dismiss()
                 }
+            }
+            .onAppear {
+                taskText = task?.name ?? ""
+                taskDate = task?.date ?? Date()
+                startTime = task?.startTime ?? Date.now
+                endTime = task?.endTime ?? Date.now
             }
             // overlay for the whole screen
             .overlay(
@@ -206,5 +214,5 @@ struct DetailsScreen: View {
 }
 
 #Preview {
-    DetailsScreen()
+    DetailsScreen(task: nil)
 }
