@@ -159,7 +159,7 @@ struct DetailsScreen: View {
         @Environment(\.modelContext) var modelContext
         @Environment(\.presentationMode) var presentationMode
         @Binding var showDeleteConfirmationPopup: Bool
-        let task: Task
+        let task: Task?
 
         var body: some View {
             ZStack {
@@ -171,7 +171,9 @@ struct DetailsScreen: View {
                     
                     HStack {
                         Button("Ok") {
-                            modelContext.delete(task)
+                            if let task = task {
+                                modelContext.delete(task)
+                            }
                             self.showDeleteConfirmationPopup = false
                             presentationMode.wrappedValue.dismiss()
                         }
