@@ -72,14 +72,6 @@ struct DetailsScreen: View {
                     dismiss()
                 }
             }
-            .onAppear() {
-                if let task = viewModel.task {
-                    task.name = taskText
-                    task.date = taskDate
-                    task.startTime = startTime
-                    task.endTime = endTime
-                }
-            }
             // overlay for the whole screen
             .overlay(
                 ZStack {
