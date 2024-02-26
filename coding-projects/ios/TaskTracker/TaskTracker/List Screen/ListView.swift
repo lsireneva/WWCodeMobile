@@ -30,11 +30,9 @@ struct ListView: View {
                                 let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
                                 ActivityItemView(name: task.name, duration: duration)
                                     .listRowSeparator(.hidden)
-                                
-                                NavigationLink(destination: DetailsScreen(task: task)) {
-                                    EmptyView()
-                                }
-                                .opacity(0) // Hides the NavigationLink visually but retains its functionality
+
+                                NavigationLink(destination: DetailsScreen(task: task, isEditingMode: true), label: {})
+                                    .opacity(0) // Hides the NavigationLink visually but retains its functionality
                             }
                             .listRowSeparator(.hidden)
                         }
