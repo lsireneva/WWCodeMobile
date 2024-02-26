@@ -20,13 +20,14 @@ struct DetailsScreen: View {
     @State private var endTime = Date.now
 
     let task: Task?
-
+    let isEditingMode: Bool?
     var body: some View {
         ZStack {
             VStack(spacing: 10) {
                 
                 TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup,
-                           showCancelConfirmationPopup: $showCancelConfirmationPopup)
+                           showCancelConfirmationPopup: $showCancelConfirmationPopup,
+                           isEditingMode: isEditingMode ?? false)
                 
                 DatePicker(selection: $taskDate, displayedComponents: .date) {
                     LeftTitleText(text: "Date")
@@ -115,17 +116,19 @@ struct DetailsScreen: View {
     struct TopBarView: View {
         @Binding var showDeleteConfirmationPopup: Bool
         @Binding var showCancelConfirmationPopup: Bool
-        
+        let isEditingMode: Bool
         var body: some View {
             HStack(alignment: .lastTextBaseline, spacing: 16){
                 Spacer()
-                Button(action: {
-                    showDeleteConfirmationPopup = true
-                },
-                       label: {
-                    Image(systemName: "trash.circle")
-                        .foregroundStyle(.black)
-                })
+                if isEditingMode {
+                    Button(action: {
+                        showDeleteConfirmationPopup = true
+                    },
+                           label: {
+                        Image(systemName: "trash.circle")
+                            .foregroundStyle(.black)
+                    })
+                }
                 Button(action: {
                     showCancelConfirmationPopup = true
                 },
@@ -224,5 +227,5 @@ struct DetailsScreen: View {
 }
 
 #Preview {
-    DetailsScreen(task: nil)
+    DetailsScreen(task: nil, isEditingMode: false)
 }

@@ -22,7 +22,7 @@ struct ListView: View {
                     ActivityItemView(name: task.name, duration: duration)
                         .listRowSeparator(.hidden)
 
-                    NavigationLink(destination: DetailsScreen(task: task), label: {})
+                    NavigationLink(destination: DetailsScreen(task: task, isEditingMode: true), label: {})
                         .opacity(0)
 
                 }
