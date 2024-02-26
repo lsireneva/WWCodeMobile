@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tasktracker.R
 import com.example.tasktracker.data.model.Task
@@ -41,13 +42,14 @@ import com.example.tasktracker.data.model.Task
                 Spacer(
                     Modifier
                         .weight(1f)
-                        .fillMaxWidth())
+                )
                 Text(
                     text = task.duration,
                     modifier = Modifier
                         .weight(1f)
                         .padding(dimensionResource(R.dimen.medium_padding)),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End
                 )
             }
 
