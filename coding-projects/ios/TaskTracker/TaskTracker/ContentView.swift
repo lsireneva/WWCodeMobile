@@ -20,8 +20,9 @@ struct ContentView: View {
                     ToolbarItem(placement: .topBarLeading) {
                         ScreenTitleView()
                     }
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
                         AddButtonView()
+                        SettingsButtonView()
                     }
                 }
         }
@@ -57,6 +58,21 @@ private struct AddButtonView: View {
         })
         .sheet(isPresented: $showDetailsScreen, content: {
             DetailsScreen(task: nil)
+        })
+    }
+}
+
+private struct SettingsButtonView: View {
+    @State private var showSettingsScreen = false
+    var body: some View {
+        Button(action: {
+            showSettingsScreen.toggle()
+        }, label: {
+            Image(systemName: "gearshape.fill")
+                .foregroundColor(Color.green)
+        })
+        .sheet(isPresented: $showSettingsScreen, content: {
+            SettingsView()
         })
     }
 }
