@@ -1,16 +1,23 @@
 package com.example.tasktracker.ui.TaskSettings
 
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -64,7 +71,7 @@ fun TaskSettingsScreen() {
                 // TODO - #171 - Add an App Theme row
                 // TODO - #170 - Add an App Icon row
             }
-            // TODO - #169 - Add a version footer row
+            VersionFooter(version = getFullVersionName())
         }
     }
 }
@@ -73,4 +80,24 @@ fun TaskSettingsScreen() {
 @Composable
 fun TaskSettingsPreview() {
     TaskSettingsScreen()
+}
+
+@Composable
+fun VersionFooter(version: String) {
+    Text(
+        text = "Version $version",
+        color = Color.Gray,
+        style = MaterialTheme.typography.labelSmall
+    )
+}
+
+@Composable
+fun getFullVersionName(): String {
+    val context = LocalContext.current
+    val packageInfo: PackageInfo? = try {
+        context.packageManager.getPackageInfo(context.packageName, 0)
+    } catch (e: PackageManager.NameNotFoundException) {
+        null
+    }
+    return packageInfo?.versionName ?: "Unknown"
 }

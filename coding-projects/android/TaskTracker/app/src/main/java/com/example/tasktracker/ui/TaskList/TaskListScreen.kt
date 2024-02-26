@@ -39,14 +39,17 @@ import com.example.tasktracker.data.model.Task
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    onNavigateToSettings: () -> Unit,
-    viewModel: TaskListViewModel = viewModel(factory = TaskListViewModel.factory)
+    viewModel: TaskListViewModel = viewModel(factory = TaskListViewModel.factory),
+    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit
 ) {
     val allTasks by viewModel.getAllTasks().collectAsState(emptyList())
 
     Scaffold(
         topBar = {
-            ListScreenTopAppBar { onNavigateToSettings() }
+            ListScreenTopAppBar(
+                { onNavigateToSettings() },
+                { onNavigateToDetail() }
+            )
         }
     ) {
         TaskList(
@@ -117,7 +120,8 @@ fun Header(text: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreenTopAppBar(
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToDetail: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -137,7 +141,7 @@ fun ListScreenTopAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = { onNavigateToDetail() }) {
                 Icon(
                     Icons.Filled.AddCircle,
                     contentDescription = stringResource(R.string.add_button)
@@ -159,7 +163,8 @@ fun ListScreenTopAppBar(
 @Composable
 private fun TopAppBarPreview() {
     ListScreenTopAppBar(
-        onNavigateToSettings = {}
+        onNavigateToSettings = {},
+        onNavigateToDetail = {}
     )
 }
 
@@ -179,6 +184,6 @@ private fun TaskListPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ListScreenPreview() {
-    TaskListScreen(onNavigateToSettings = {})
+    TaskListScreen(onNavigateToSettings = {}, onNavigateToDetail = {})
 }
 
