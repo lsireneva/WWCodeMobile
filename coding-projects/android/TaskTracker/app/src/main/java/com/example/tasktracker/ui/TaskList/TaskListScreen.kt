@@ -18,21 +18,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import com.example.tasktracker.data.TaskRepository
-import com.example.tasktracker.data.model.Task
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
+import com.example.tasktracker.data.model.Task
 
 /**
  * Created by Gauri Gadkari on 1/23/24.
@@ -64,7 +63,7 @@ fun TaskListScreen(
 @Composable
 fun TaskList(
     taskList: List<Task>,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier
@@ -175,8 +174,8 @@ private fun TaskListPreview() {
             Task(2, "finishing certifications", "Yesterday", 0, 0, "03:40:04"),
             Task(3, "setting up new dryer unit", "December 19, Tuesday", 0, 0, "01:20:21"),
             Task(4, "coding crunch time", "December 19, Tuesday", 0, 0, "09:30:10")
-        ),
-        modifier = Modifier)
+        )
+    )
 }
 
 @Preview(showBackground = true)
