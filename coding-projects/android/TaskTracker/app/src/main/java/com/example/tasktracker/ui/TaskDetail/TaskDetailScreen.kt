@@ -47,7 +47,6 @@ import com.example.tasktracker.ui.theme.Green
  * Screen to display task details and add, edit or delete task
  * Developed compose UI by Liubov Sireneva on 1/29/24
  */
-class TaskDetailScreen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TaskDetailScreen(onNavigateToList: () -> Unit) {
@@ -58,7 +57,6 @@ class TaskDetailScreen {
             setShowCancelConfirmationPopup(false)
             onNavigateToList()
         }
-
         OutlinedCard(
             colors = CardDefaults.cardColors(
                 containerColor = Color.White,
@@ -245,4 +243,4 @@ class TaskDetailScreen {
             onCancel = {  }
         )
     }
-}
+

@@ -37,12 +37,13 @@ import com.example.tasktracker.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit
 ) {
     Scaffold(
         topBar = {
             ListScreenTopAppBar(
-                { onNavigateToSettings() }
+                { onNavigateToSettings() },
+                { onNavigateToDetail() }
             )
         }
     ) {
@@ -114,7 +115,8 @@ fun Header(text: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreenTopAppBar(
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToDetail: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -134,7 +136,7 @@ fun ListScreenTopAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = { onNavigateToDetail() }) {
                 Icon(
                     Icons.Filled.AddCircle,
                     contentDescription = "Add Button"
@@ -156,7 +158,8 @@ fun ListScreenTopAppBar(
 @Composable
 private fun TopAppBarPreview() {
     ListScreenTopAppBar(
-        onNavigateToSettings = {}
+        onNavigateToSettings = {},
+        onNavigateToDetail = {}
     )
 }
 
@@ -169,6 +172,6 @@ private fun TaskListPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ListScreenPreview() {
-    TaskListScreen(onNavigateToSettings = {})
+    TaskListScreen(onNavigateToSettings = {}, onNavigateToDetail = {})
 }
 
