@@ -13,37 +13,45 @@ struct DetailsScreen: View {
     @Environment(\.modelContext) var modelContext
     @Query var tasks: [Task]
     
+    @Environment(\.modelContext) private var context
+    @ObservedObject var viewModel = DetailsViewModel()
     @State private var taskText: String = ""
     @State private var shouldDismiss: Bool = false
+    @State private var taskDate = Date.now
     @State private var showDeleteConfirmationPopup: Bool = false
-
     @State private var selectedDate = Date.now
+    @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
+
+    let task: Task?
 
     var body: some View {
         ZStack {
             VStack(spacing: 10) {
-
-                TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
-
-                ButtonSelectorView(descriptionText: "Date", buttonString: "Date") {
-                    // TODO: Add date picker #129
+                
+                TopBarView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup,
+                           showCancelConfirmationPopup: $showCancelConfirmationPopup)
+                
+                DatePicker(selection: $taskDate, displayedComponents: .date) {
+                    LeftTitleText(text: "Date")
                 }
+                .datePickerStyle(.compact)
+                .padding([.leading, .trailing])
                 
                 TextField("Enter your task", text: $taskText)
                     .padding()
                     .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
                     .border(.secondary)
-
+                
                 DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
-                    TextView(text: "Start Time")
+                    LeftTitleText(text: "Start Time")
                 }
                 .datePickerStyle(.compact)
                 .padding([.leading, .trailing])
-
+                
                 DatePicker(selection: $endTime, displayedComponents: .hourAndMinute) {
-                    TextView(text: "End Time")
+                    LeftTitleText(text: "End Time")
                 }
                 .datePickerStyle(.compact)
                 .padding([.leading, .trailing])
@@ -51,7 +59,6 @@ struct DetailsScreen: View {
                 Spacer()
                 
                 DoneButton(shouldDismiss: $shouldDismiss, taskText: $taskText, selectedDate: $selectedDate, startTime: $startTime, endTime: $endTime )
-
                 Spacer()
             }
             .padding()
@@ -63,25 +70,47 @@ struct DetailsScreen: View {
             .cornerRadius(25)
             .onChange(of: shouldDismiss) {
                 if shouldDismiss {
+                    if viewModel.task != nil {
+                        viewModel.updateTask(name: taskText, date: taskDate, startTime: startTime, endTime: endTime)
+
+                    }
+
                     dismiss()
                 }
-        }
+            }
+            .onAppear {
+                taskText = task?.name ?? ""
+                taskDate = task?.date ?? Date()
+                startTime = task?.startTime ?? Date.now
+                endTime = task?.endTime ?? Date.now
+            }
             // overlay for the whole screen
             .overlay(
                 ZStack {
-                    if showDeleteConfirmationPopup {
+                    if showDeleteConfirmationPopup || showCancelConfirmationPopup {
                         Color.black.opacity(0.5)
                             .edgesIgnoringSafeArea(.all)
                             .onTapGesture {
                                 showDeleteConfirmationPopup = false
+                                showCancelConfirmationPopup = false
                             }
                     }
                 }
             )
-
+            
             // show popup on the whole screen
             if $showDeleteConfirmationPopup.wrappedValue {
-                DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
+                if let unwrappedTask = task {
+                    DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup, task: unwrappedTask)
+                }
+            }
+            
+            if $showCancelConfirmationPopup.wrappedValue {
+                PopUpView(text: "You have unsaved data. Are you sure you want to close without saving?",
+                          firstButtonText: "Ok",
+                          secondButtonText: "Cancel",
+                          showButton: $showCancelConfirmationPopup,
+                          shouldDismiss: $shouldDismiss)
             }
         }
         Spacer()
@@ -89,7 +118,8 @@ struct DetailsScreen: View {
     
     struct TopBarView: View {
         @Binding var showDeleteConfirmationPopup: Bool
-
+        @Binding var showCancelConfirmationPopup: Bool
+        
         var body: some View {
             HStack(alignment: .lastTextBaseline, spacing: 16){
                 Spacer()
@@ -101,7 +131,7 @@ struct DetailsScreen: View {
                         .foregroundStyle(.black)
                 })
                 Button(action: {
-                    // TODO: Add confirmation pop-up for cancel button #132
+                    showCancelConfirmationPopup = true
                 },
                        label: {
                     Image(systemName: "x.circle.fill")
@@ -112,10 +142,10 @@ struct DetailsScreen: View {
             .padding()
         }
     }
-
-    struct TextView: View {
+    
+    struct LeftTitleText: View {
         var text: String
-
+        
         var body: some View {
             Text(text)
                 .textCase(.uppercase)
@@ -123,40 +153,6 @@ struct DetailsScreen: View {
                 .fontWeight(.medium)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
-        }
-    }
-
-    struct ButtonSelectorView: View {
-        var descriptionText: String
-        @State var buttonString: String
-        var buttonAction: () -> Void
-        
-        init(descriptionText: String, buttonString: String, buttonAction: @escaping () -> Void) {
-            self.descriptionText = descriptionText
-            self.buttonString = buttonString
-            self.buttonAction = buttonAction
-        }
-        
-        var body: some View {
-            HStack {
-                TextView(text: descriptionText)
-                Spacer()
-                Button(action: {
-                    buttonAction()
-                },
-                       label: {
-                    Text(buttonString)
-                        .foregroundStyle(.white)
-                        .fontWeight(.medium)
-                })
-                .padding()
-                .frame(minWidth: 0, maxWidth: 120)
-                .border(Color.green, width: 3)
-                .background(.green)
-                .minimumScaleFactor(0.5)
-                
-            }
-            .padding()
         }
     }
     
@@ -168,7 +164,7 @@ struct DetailsScreen: View {
         @Binding var selectedDate: Date
         @Binding var startTime: Date
         @Binding var endTime: Date
-
+        
         var body: some View {
             Button("Done") {
                 var newTask = Task(name: taskText, date: selectedDate, startTime: startTime, endTime: endTime )
@@ -187,10 +183,12 @@ struct DetailsScreen: View {
             .cornerRadius(25)
         }
     }
-
+    
     private struct DeleteConfirmationPopupView: View {
+        @Environment(\.modelContext) var modelContext
         @Environment(\.presentationMode) var presentationMode
         @Binding var showDeleteConfirmationPopup: Bool
+        let task: Task
 
         var body: some View {
             ZStack {
@@ -199,10 +197,10 @@ struct DetailsScreen: View {
                         .multilineTextAlignment(.center)
                         .font(.title2)
                         .padding()
-
+                    
                     HStack {
                         Button("Ok") {
-                            // TODO: Delete Timed Activity #80
+                            modelContext.delete(task)
                             self.showDeleteConfirmationPopup = false
                             presentationMode.wrappedValue.dismiss()
                         }
@@ -212,10 +210,10 @@ struct DetailsScreen: View {
                         .background(.gray)
                         .foregroundColor(.white)
                         .cornerRadius(5)
-
-
+                        
+                        
                         .padding()
-
+                        
                         Button("Cancel") {
                             self.showDeleteConfirmationPopup = false
                         }
@@ -233,12 +231,11 @@ struct DetailsScreen: View {
             .frame(width: 300, height: 200)
             .cornerRadius(20)
             .shadow(radius: 20)
-
+            
         }
     }
 }
 
 #Preview {
-    DetailsScreen()
-        .modelContainer(for: Task.self)
+    DetailsScreen(task: nil)
 }

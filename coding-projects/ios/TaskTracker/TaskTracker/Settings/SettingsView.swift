@@ -35,9 +35,8 @@ struct SettingsView: View {
                 
                 Section {
                     DaysView()
-
-                    // TODO: Add Task Reminder Row (with toggle) #118
                     ShowBadgeView()
+                    ReminderNotificationView()
                     ReminderTimeView()
                 }
 
@@ -50,10 +49,14 @@ struct SettingsView: View {
                         .fontWeight(.bold)
                 }
 
-                // TODO: Add Section Header: Appearance #108
                 Section {
                     ThemeView()
                     // TODO: App Icon #117
+                } header: {
+                    Label("Appearance",
+                          systemImage: "paintpalette")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
                 }
 
             }
@@ -205,6 +208,19 @@ private struct ReminderTimeView: View {
             Text("Reminder Time")
             Spacer()
             Text("7:00 PM")
+        }
+    }
+}
+
+private struct ReminderNotificationView: View {
+    @State private var canNotify = false
+
+    var body: some View {
+        HStack{
+            Text("Send notification")
+            Spacer()
+            Toggle(isOn: $canNotify) {}
+                .tint(.purple)
         }
     }
 }

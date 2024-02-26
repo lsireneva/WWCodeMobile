@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var context
+    
     var body: some View {
         NavigationStack {
             Spacer()
@@ -17,8 +20,9 @@ struct ContentView: View {
                     ToolbarItem(placement: .topBarLeading) {
                         ScreenTitleView()
                     }
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
                         AddButtonView()
+                        SettingsButtonView()
                     }
                 }
         }
@@ -53,7 +57,22 @@ private struct AddButtonView: View {
                 .font(Font.body.weight(.black))
         })
         .sheet(isPresented: $showDetailsScreen, content: {
-            DetailsScreen()
+            DetailsScreen(task: nil)
+        })
+    }
+}
+
+private struct SettingsButtonView: View {
+    @State private var showSettingsScreen = false
+    var body: some View {
+        Button(action: {
+            showSettingsScreen.toggle()
+        }, label: {
+            Image(systemName: "gearshape.fill")
+                .foregroundColor(Color.green)
+        })
+        .sheet(isPresented: $showSettingsScreen, content: {
+            SettingsView()
         })
     }
 }

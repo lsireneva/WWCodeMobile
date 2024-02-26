@@ -21,18 +21,28 @@ struct ListView: View {
     }
 
     var body: some View {
-        List {
-            ForEach(sortedDates, id: \.self) { date in
-                Section(header: Text(date).foregroundColor(.black)) {
-                    ForEach(groupedTasks[date] ?? []) { task in
-                    let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
-                    ActivityItemView(name: task.name, duration: duration)
-                        .listRowSeparator(.hidden)
+        NavigationStack {
+            List {
+                ForEach(sortedDates, id: \.self) { date in
+                    Section(header: Text(date).foregroundColor(.black)) {
+                        ForEach(groupedTasks[date] ?? [], id: \.id) { task in
+                            ZStack {
+                                let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
+                                ActivityItemView(name: task.name, duration: duration)
+                                    .listRowSeparator(.hidden)
+                                
+                                NavigationLink(destination: DetailsScreen(task: task)) {
+                                    EmptyView()
+                                }
+                                .opacity(0) // Hides the NavigationLink visually but retains its functionality
+                            }
+                            .listRowSeparator(.hidden)
+                        }
                     }
                 }
             }
+            .listStyle(.plain)
         }
-        .listStyle(.plain)
     }
 }
 
@@ -53,7 +63,6 @@ struct ActivityItemView: View {
         )
     }
 }
-
 
 #Preview {
     ListView(viewModel: ListViewModel())
