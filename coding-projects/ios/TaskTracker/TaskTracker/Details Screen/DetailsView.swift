@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var context
     @ObservedObject var viewModel = DetailsViewModel()
     @State private var taskText: String = ""
     @State private var shouldDismiss: Bool = false
@@ -65,6 +66,11 @@ struct DetailsScreen: View {
             .cornerRadius(25)
             .onChange(of: shouldDismiss) {
                 if shouldDismiss {
+                    if viewModel.task != nil {
+                        viewModel.updateTask(name: taskText, date: taskDate, startTime: startTime, endTime: endTime)
+
+                    }
+
                     dismiss()
                 }
             }
