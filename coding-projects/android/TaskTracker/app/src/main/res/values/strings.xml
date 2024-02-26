@@ -10,4 +10,5 @@
     <string name="textfield_label">Today I worked on ...</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="add_button">Add Button</string>
 </resources>

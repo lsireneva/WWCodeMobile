@@ -46,9 +46,7 @@ fun TaskListScreen(
 
     Scaffold(
         topBar = {
-            ListScreenTopAppBar(
-                { onNavigateToSettings() }
-            )
+            ListScreenTopAppBar { onNavigateToSettings() }
         }
     ) {
         TaskList(
@@ -142,7 +140,7 @@ fun ListScreenTopAppBar(
             IconButton(onClick = { /* do something */ }) {
                 Icon(
                     Icons.Filled.AddCircle,
-                    contentDescription = "Add Button"
+                    contentDescription = stringResource(R.string.add_button)
                 )
             }
             IconButton(onClick = { onNavigateToSettings() }) {
