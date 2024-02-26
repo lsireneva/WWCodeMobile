@@ -96,7 +96,9 @@ struct DetailsScreen: View {
             
             // show popup on the whole screen
             if $showDeleteConfirmationPopup.wrappedValue {
-                DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup)
+                if let unwrappedTask = task {
+                    DeleteConfirmationPopupView(showDeleteConfirmationPopup: $showDeleteConfirmationPopup, task: unwrappedTask)
+                }
             }
             
             if $showCancelConfirmationPopup.wrappedValue {
@@ -170,9 +172,11 @@ struct DetailsScreen: View {
     }
     
     private struct DeleteConfirmationPopupView: View {
+        @Environment(\.modelContext) var modelContext
         @Environment(\.presentationMode) var presentationMode
         @Binding var showDeleteConfirmationPopup: Bool
-        
+        let task: Task
+
         var body: some View {
             ZStack {
                 VStack {
@@ -183,7 +187,7 @@ struct DetailsScreen: View {
                     
                     HStack {
                         Button("Ok") {
-                            // TODO: Delete Timed Activity #80
+                            modelContext.delete(task)
                             self.showDeleteConfirmationPopup = false
                             presentationMode.wrappedValue.dismiss()
                         }
