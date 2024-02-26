@@ -57,7 +57,7 @@ private struct AddButtonView: View {
                 .font(Font.body.weight(.black))
         })
         .sheet(isPresented: $showDetailsScreen, content: {
-            DetailsScreen(task: nil)
+            DetailsScreen(task: nil, isEditingMode: false)
         })
     }
 }
