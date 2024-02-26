@@ -13,13 +13,23 @@ struct ListView: View {
     @Query var tasks: [Task]
 
     var body: some View {
-        List(tasks) { task in
-            // TODO: Display list items in sections based on date #126
-            let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
-            ActivityItemView(name: task.name, duration: duration)
+        NavigationStack {
+            List(tasks) { task in
+                // TODO: Display list items in sections based on date #126
+
+                ZStack {
+                    let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
+                    ActivityItemView(name: task.name, duration: duration)
+                        .listRowSeparator(.hidden)
+
+                    NavigationLink(destination: DetailsScreen(task: task), label: {})
+                        .opacity(0)
+
+                }
                 .listRowSeparator(.hidden)
+            }
+            .listStyle(.plain)
         }
-        .listStyle(.plain)
     }
 }
 
