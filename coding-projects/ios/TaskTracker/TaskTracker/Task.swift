@@ -10,6 +10,7 @@ import SwiftData
 
 @Model
 class Task {
+    
     var name: String
     var date: Date
     var startTime: Date
@@ -20,5 +21,13 @@ class Task {
         self.date = date
         self.startTime = startTime
         self.endTime = endTime
+    }
+    // Calculate the duration between startTime and endTime
+    var duration: String {
+        let duration = endTime.timeIntervalSince(startTime)
+        let hours = Int(duration) / 3600
+        let minutes = Int(duration) / 60 % 60
+        let seconds = Int(duration) % 60
+        return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
     }
 }

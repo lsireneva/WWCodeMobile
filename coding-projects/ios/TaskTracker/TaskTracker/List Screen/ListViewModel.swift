@@ -23,6 +23,21 @@ class ListViewModel: ObservableObject {
             return "Unknown"
         }
     }
+    
+    func customFormattedDate(from date: Date) -> String {
+
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        if  calendar.isDateInToday(date) {
+            return "Today"
+
+        } else  if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else {
+            dateFormatter.dateFormat = "MMMM dd, EEEE"
+            return  dateFormatter.string(from: date)
+        }
+    }
 
 //    let activities: [Activity] = [
 //        Activity(

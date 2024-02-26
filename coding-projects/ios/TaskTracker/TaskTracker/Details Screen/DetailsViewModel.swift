@@ -6,7 +6,14 @@
 //
 
 import Foundation
+import SwiftData
 
 class DetailsViewModel: ObservableObject {
+    
 
+    
+    
+    
+    
+   
 }

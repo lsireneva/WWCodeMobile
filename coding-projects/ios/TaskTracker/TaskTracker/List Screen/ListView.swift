@@ -11,13 +11,26 @@ import SwiftData
 struct ListView: View {
     @ObservedObject var viewModel: ListViewModel
     @Query var tasks: [Task]
+    
+    private var groupedTasks: [String: [Task]] {
+        Dictionary(grouping: tasks, by: { viewModel.customFormattedDate(from: $0.date) })
+    }
+    
+    private var sortedDates: [String] {
+        groupedTasks.keys.sorted()
+    }
 
     var body: some View {
-        List(tasks) { task in
-            // TODO: Display list items in sections based on date #126
-            let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
-            ActivityItemView(name: task.name, duration: duration)
-                .listRowSeparator(.hidden)
+        List {
+            ForEach(sortedDates, id: \.self) { date in
+                Section(header: Text(date).foregroundColor(.black)) {
+                    ForEach(groupedTasks[date] ?? []) { task in
+                    let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
+                    ActivityItemView(name: task.name, duration: duration)
+                        .listRowSeparator(.hidden)
+                    }
+                }
+            }
         }
         .listStyle(.plain)
     }
