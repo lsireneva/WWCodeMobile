@@ -37,12 +37,7 @@ import com.example.tasktracker.data.model.Task
                         .weight(1f)
                         .padding(dimensionResource(R.dimen.medium_padding)),
                     style = MaterialTheme.typography.bodySmall,
-
                     )
-                Spacer(
-                    Modifier
-                        .padding(dimensionResource(R.dimen.spacer_width))
-                )
                 Text(
                     text = task.duration,
                     modifier = Modifier
