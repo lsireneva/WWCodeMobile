@@ -41,7 +41,7 @@ import com.example.tasktracker.data.model.Task
                     )
                 Spacer(
                     Modifier
-                        .weight(1f)
+                        .padding(dimensionResource(R.dimen.spacer_width))
                 )
                 Text(
                     text = task.duration,
