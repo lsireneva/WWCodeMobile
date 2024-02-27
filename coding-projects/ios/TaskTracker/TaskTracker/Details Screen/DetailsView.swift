@@ -6,15 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
+    @Query var tasks: [Task]
+    
     @Environment(\.modelContext) private var context
     @ObservedObject var viewModel = DetailsViewModel()
     @State private var taskText: String = ""
     @State private var shouldDismiss: Bool = false
     @State private var taskDate = Date.now
     @State private var showDeleteConfirmationPopup: Bool = false
+    @State private var selectedDate = Date.now
     @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
@@ -54,8 +59,7 @@ struct DetailsScreen: View {
                 
                 Spacer()
                 
-                DoneButton(shouldDismiss: $shouldDismiss)
-                
+                DoneButton(shouldDismiss: $shouldDismiss, taskText: $taskText, selectedDate: $selectedDate, startTime: $startTime, endTime: $endTime )
                 Spacer()
             }
             .padding()
@@ -156,11 +160,20 @@ struct DetailsScreen: View {
     }
     
     struct DoneButton: View {
+        @Environment(\.modelContext) var modelContext
+        @Query var tasks: [Task]
         @Binding var shouldDismiss: Bool
+        @Binding var taskText: String
+        @Binding var selectedDate: Date
+        @Binding var startTime: Date
+        @Binding var endTime: Date
         
         var body: some View {
             Button("Done") {
+                var newTask = Task(name: taskText, date: selectedDate, startTime: startTime, endTime: endTime )
+                modelContext.insert(newTask)
                 shouldDismiss = true
+                
             }
             .frame(minWidth: 0, maxWidth: 200)
             .font(.system(size: 18))

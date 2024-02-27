@@ -11,22 +11,33 @@ import SwiftData
 struct ListView: View {
     @ObservedObject var viewModel: ListViewModel
     @Query var tasks: [Task]
+    
+    private var groupedTasks: [String: [Task]] {
+        Dictionary(grouping: tasks, by: { viewModel.customFormattedDate(from: $0.date) })
+    }
+    
+    private var sortedDates: [String] {
+        groupedTasks.keys.sorted()
+    }
 
     var body: some View {
         NavigationStack {
-            List(tasks) { task in
-                // TODO: Display list items in sections based on date #126
+            List {
+                ForEach(sortedDates, id: \.self) { date in
+                    Section(header: Text(date).foregroundColor(.black)) {
+                        ForEach(groupedTasks[date] ?? [], id: \.id) { task in
+                            ZStack {
+                                let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
+                                ActivityItemView(name: task.name, duration: duration)
+                                    .listRowSeparator(.hidden)
 
-                ZStack {
-                    let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
-                    ActivityItemView(name: task.name, duration: duration)
-                        .listRowSeparator(.hidden)
-
-                    NavigationLink(destination: DetailsScreen(task: task, isEditingMode: true), label: {})
-                        .opacity(0)
-
+                                NavigationLink(destination: DetailsScreen(task: task, isEditingMode: true), label: {})
+                                    .opacity(0) // Hides the NavigationLink visually but retains its functionality
+                            }
+                            .listRowSeparator(.hidden)
+                        }
+                    }
                 }
-                .listRowSeparator(.hidden)
             }
             .listStyle(.plain)
         }

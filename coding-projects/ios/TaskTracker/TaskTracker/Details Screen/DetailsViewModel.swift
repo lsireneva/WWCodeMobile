@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import SwiftData
 
 class DetailsViewModel: ObservableObject {
     // Use `Published` property wrapper so that any changes to `task` will auto trigger the view to update
     @Published var task: Task?
-    
+
     init(task: Task? = nil) {
         self.task = task
     }
