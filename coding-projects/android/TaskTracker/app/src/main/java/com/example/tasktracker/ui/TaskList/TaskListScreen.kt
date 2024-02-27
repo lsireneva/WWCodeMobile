@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tasktracker.R
+import com.example.tasktracker.ui.TaskDetail.TaskDetailViewModel
 
 /**
  * Created by Gauri Gadkari on 1/23/24.
@@ -37,7 +38,9 @@ import com.example.tasktracker.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit
+    taskDetailViewModel: TaskDetailViewModel? = null,
+    onNavigateToSettings: () -> Unit,
+    onNavigateToDetail: () -> Unit
 ) {
     Scaffold(
         topBar = {

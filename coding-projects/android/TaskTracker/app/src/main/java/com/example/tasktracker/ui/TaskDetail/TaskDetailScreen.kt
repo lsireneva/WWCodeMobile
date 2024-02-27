@@ -38,7 +38,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
+import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.ui.theme.Green
 
 
@@ -50,6 +52,8 @@ import com.example.tasktracker.ui.theme.Green
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TaskDetailScreen(onNavigateToList: () -> Unit) {
+
+        val taskDetailViewModel: TaskDetailViewModel = viewModel()
         val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember { mutableStateOf(false) }
 
         // Function to handle cancel confirmation
