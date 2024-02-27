@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.flowOf
  */
 class TaskListViewModel: ViewModel() {
 
+    /**
+     * following hardcoded strings should eventually be replaced by data based on user input once
+     * app persistence is implemented and TaskRepository is modified to retrieve data from the DAO
+     */
     fun getAllTasks(): Flow<List<Task>> = flowOf(
         listOf(
             Task(
@@ -48,12 +52,6 @@ class TaskListViewModel: ViewModel() {
                 "09:30:10"
             )
         )
-
-        /**
-         * these hardcoded strings should eventually be replaced by data based on user input once
-         * app persistence is implemented and TaskRepository is modified to retrieve data from the DAO
-         */
-
     )
     companion object {
         val factory : ViewModelProvider.Factory = viewModelFactory {
