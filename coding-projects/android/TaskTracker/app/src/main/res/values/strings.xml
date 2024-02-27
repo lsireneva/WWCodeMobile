@@ -13,4 +13,8 @@
     <string name="add_button">Add Button</string>
     <string name="ok">Ok</string>
     <string name="cancel_popup_message">You have unsaved data, are you sure you want to close without saving?</string>
+<<<<<<< HEAD
 </resources>
+=======
+</resources>
+>>>>>>> 25b36608d27a9605cab25258c52fc718c6d064b2
