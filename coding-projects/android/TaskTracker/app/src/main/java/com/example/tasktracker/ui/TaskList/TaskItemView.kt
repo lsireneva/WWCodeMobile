@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tasktracker.R
 import com.example.tasktracker.data.model.Task
@@ -21,51 +22,41 @@ import com.example.tasktracker.data.model.Task
 /**
  * Created by Gauri Gadkari on 1/23/24.
  */
-class TaskItemView {
-
-}
-
-@Composable
-fun TaskCard(task: Task, modifier: Modifier = Modifier) {
-    Card(modifier = modifier
+    @Composable
+    fun TaskCard(task: Task, modifier: Modifier = Modifier) {
+        Card(modifier = modifier
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White,
+            ),
         ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = task.taskTitle,
-                modifier = Modifier.padding(
-                    top = dimensionResource(id = R.dimen.medium_padding),
-                    bottom = dimensionResource(id = R.dimen.medium_padding),
-                    start = dimensionResource(id = R.dimen.medium_padding)
-                ),
-                style = MaterialTheme.typography.bodySmall,
+            Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(
+                    text = task.activityName,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(dimensionResource(R.dimen.medium_padding)),
+                    style = MaterialTheme.typography.bodySmall,
+                    )
+                Text(
+                    text = task.duration,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(dimensionResource(R.dimen.medium_padding)),
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End
+                )
+            }
 
-            )
-            Spacer(
-                Modifier
-                    .weight(1f)
-                    .fillMaxWidth())
-            Text(
-                modifier = Modifier
-                    .padding(end = dimensionResource(R.dimen.medium_padding))
-                    .align(alignment = Alignment.CenterVertically),
-                text = task.taskTime,
-                style = MaterialTheme.typography.bodySmall
-            )
         }
 
     }
 
-}
+    @Preview(showBackground = true)
+    @Composable
+    private fun TaskCardPreview(){
+        TaskCard(Task(1, "Walking", "Yesterday", 0, 0, "01:35:08"))
+    }
 
-@Preview(showBackground = true)
-@Composable
-private fun TaskCardPreview(){
-    TaskCard(Task("Walking", "01:35:08", "Yesterday"))
-}
+
+
