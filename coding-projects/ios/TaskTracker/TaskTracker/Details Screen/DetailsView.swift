@@ -18,7 +18,6 @@ struct DetailsScreen: View {
     @State private var shouldDismiss: Bool = false
     @State private var taskDate = Date.now
     @State private var showDeleteConfirmationPopup: Bool = false
-    @State private var selectedDate = Date.now
     @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
@@ -162,7 +161,7 @@ struct DetailsScreen: View {
         @Environment(\.modelContext) var modelContext
         @Binding var shouldDismiss: Bool
         @Binding var taskText: String
-        @Binding var selectedDate: Date
+        @Binding var taskDate: Date
         @Binding var startTime: Date
         @Binding var endTime: Date
         
@@ -170,6 +169,7 @@ struct DetailsScreen: View {
             Button("Done") {
                 var newTask = Task(name: taskText, date: selectedDate, startTime: startTime, endTime: endTime )
                 modelContext.insert(newTask)
+                    var newTask = Task(name: taskText, date: taskDate, startTime: startTime, endTime: endTime )
                 shouldDismiss = true
                 
             }
