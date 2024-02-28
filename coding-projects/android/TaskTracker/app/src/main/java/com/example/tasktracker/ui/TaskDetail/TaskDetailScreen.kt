@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.example.tasktracker.R
 import com.example.tasktracker.ui.theme.Green
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -123,7 +124,6 @@ import java.util.TimeZone
                     unfocusedLabelColor = Color.Gray,
                     cursorColor = Color.Gray,
                     focusedLabelColor = Color.Gray,
-                    textColor = Color.Black,
                     containerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -165,12 +165,7 @@ import java.util.TimeZone
     @Composable
     fun DetailDateButton() {
         var date by remember {
-            mutableStateOf(
-                SimpleDateFormat(
-                    "dd MMM yyyy",
-                    Locale.getDefault()
-                ).format(System.currentTimeMillis())
-            )
+            mutableStateOf(convertMillisToDate(Calendar.getInstance().timeInMillis))
         }
 
         var showDatePicker by remember { mutableStateOf(false) }
