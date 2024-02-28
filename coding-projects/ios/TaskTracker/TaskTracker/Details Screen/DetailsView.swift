@@ -11,7 +11,6 @@ import SwiftData
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    @Query var tasks: [Task]
     
     @Environment(\.modelContext) private var context
     @ObservedObject var viewModel = DetailsViewModel()
@@ -161,7 +160,6 @@ struct DetailsScreen: View {
     
     struct DoneButton: View {
         @Environment(\.modelContext) var modelContext
-        @Query var tasks: [Task]
         @Binding var shouldDismiss: Bool
         @Binding var taskText: String
         @Binding var selectedDate: Date
