@@ -11,7 +11,6 @@ import SwiftData
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    @Query var tasks: [Task]
     
     @Environment(\.modelContext) private var context
     @ObservedObject var viewModel = DetailsViewModel()
@@ -19,7 +18,6 @@ struct DetailsScreen: View {
     @State private var shouldDismiss: Bool = false
     @State private var taskDate = Date.now
     @State private var showDeleteConfirmationPopup: Bool = false
-    @State private var selectedDate = Date.now
     @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
@@ -59,7 +57,7 @@ struct DetailsScreen: View {
                 
                 Spacer()
                 
-                DoneButton(shouldDismiss: $shouldDismiss, taskText: $taskText, selectedDate: $selectedDate, startTime: $startTime, endTime: $endTime )
+                DoneButton(shouldDismiss: $shouldDismiss, taskText: $taskText, taskDate: $taskDate, startTime: $startTime, endTime: $endTime, task: task )
                 Spacer()
             }
             .padding()
@@ -161,17 +159,25 @@ struct DetailsScreen: View {
     
     struct DoneButton: View {
         @Environment(\.modelContext) var modelContext
-        @Query var tasks: [Task]
         @Binding var shouldDismiss: Bool
         @Binding var taskText: String
-        @Binding var selectedDate: Date
+        @Binding var taskDate: Date
         @Binding var startTime: Date
         @Binding var endTime: Date
-        
+        let task: Task?
+
         var body: some View {
             Button("Done") {
-                var newTask = Task(name: taskText, date: selectedDate, startTime: startTime, endTime: endTime )
-                modelContext.insert(newTask)
+                if let currentTask = task {
+                    currentTask.name = taskText
+                    currentTask.date = taskDate
+                    currentTask.startTime = startTime
+                    currentTask.endTime = endTime
+                } else {
+                    var newTask = Task(name: taskText, date: taskDate, startTime: startTime, endTime: endTime )
+                    modelContext.insert(newTask)
+                }
+
                 shouldDismiss = true
                 
             }
