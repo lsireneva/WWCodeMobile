@@ -138,7 +138,7 @@ import com.example.tasktracker.ui.theme.Green
             ) {}
 
             OutlinedButton(
-                onClick = { },
+                onClick = { onNavigateToList() },
                 colors = ButtonDefaults.textButtonColors(
                     containerColor = Color.White, contentColor = Green
                 ),

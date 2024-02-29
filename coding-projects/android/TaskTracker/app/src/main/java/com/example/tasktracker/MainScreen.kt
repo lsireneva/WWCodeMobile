@@ -23,7 +23,10 @@ fun MainScreen() {
             TaskSettingsScreen()
         }
         composable(NavScreens.TaskDetail.route) {
-            TaskDetailScreen(onNavigateToList = { navController.navigate(NavScreens.TaskList.route) })
+            TaskDetailScreen(onNavigateToList = { navController.navigate(NavScreens.TaskList.route) },
+//                             onDone = { navController.popBackStack(NavScreens.TaskList.route, inclusive = false) }
+
+                )
         }
     }
 }
