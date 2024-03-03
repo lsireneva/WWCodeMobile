@@ -136,12 +136,12 @@ fun WhatsNew() {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_whats_new),
-                contentDescription = "what's new"
+                contentDescription = null
             )
 
             Text(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                text = "What's New",
+                text = stringResource(id = R.string.whats_new),
                 color = Color.Black,
                 style = MaterialTheme.typography.bodyMedium
             )
