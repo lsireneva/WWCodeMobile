@@ -16,6 +16,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +26,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +45,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.ui.theme.Green
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 /**
@@ -73,8 +81,6 @@ import com.example.tasktracker.ui.theme.Green
             shape = RoundedCornerShape(dimensionResource(R.dimen.detail_card_shape))
 
         ) {
-            val dateInfo =
-                "JAN 29 2024" //these values should be changed, it needs to be get from ViewModel
             val startTimeInfo = "08:22:10"
             val endTimeInfo = "09:12:01"
             Row(
@@ -100,10 +106,8 @@ import com.example.tasktracker.ui.theme.Green
                 )
             }
 
-            LabelButtonRow(
-                label = stringResource(id = R.string.date_label).uppercase(),
-                buttonInfo = dateInfo
-            ) {}
+            DetailDateButton()
+
             var textState by remember { mutableStateOf("") }
 
             TextField(
@@ -124,7 +128,6 @@ import com.example.tasktracker.ui.theme.Green
                     unfocusedLabelColor = Color.Gray,
                     cursorColor = Color.Gray,
                     focusedLabelColor = Color.Gray,
-                    textColor = Color.Black,
                     containerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -142,7 +145,7 @@ import com.example.tasktracker.ui.theme.Green
             ) {}
 
             OutlinedButton(
-                onClick = { },
+                onClick = { onNavigateToList() },
                 colors = ButtonDefaults.textButtonColors(
                     containerColor = Color.White, contentColor = Green
                 ),
@@ -161,6 +164,71 @@ import com.example.tasktracker.ui.theme.Green
                 Text(text = stringResource(id = R.string.done).uppercase())
             }
         }
+    }
+
+    @Composable
+    fun DetailDateButton() {
+        var date by remember {
+            mutableStateOf(convertMillisToDate(Calendar.getInstance().timeInMillis))
+        }
+
+        var showDatePicker by remember { mutableStateOf(false) }
+
+        LabelButtonRow(
+            label = stringResource(id = R.string.date_label).uppercase(),
+            buttonInfo = date
+        ) { showDatePicker = true }
+
+        if (showDatePicker) {
+            DetailDatePickerDialog(
+                onDateSelected = { date = it },
+                onDismiss = { showDatePicker = false }
+            )
+        }
+    }
+
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun DetailDatePickerDialog(
+        onDateSelected: (String) -> Unit,
+        onDismiss: () -> Unit
+    ) {
+        val datePickerState = rememberDatePickerState()
+
+        val selectedDate = datePickerState.selectedDateMillis?.let {
+            convertMillisToDate(it)
+        } ?: ""
+
+
+        DatePickerDialog(
+            onDismissRequest = { onDismiss() },
+            confirmButton = {
+                Button(onClick = {
+                    onDateSelected(selectedDate)
+                    onDismiss()
+                }
+
+                ) {
+                    Text(text = stringResource(id = R.string.ok).uppercase())
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    private fun convertMillisToDate(millis: Long): String {
+        val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        formatter.timeZone = TimeZone.getTimeZone("UTC")
+        return formatter.format(Date(millis))
     }
 
     @Composable

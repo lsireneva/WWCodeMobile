@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha02")
     // Viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // Coil
