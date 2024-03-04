@@ -4,11 +4,9 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -67,15 +65,13 @@ fun TaskSettingsScreen() {
             // TODO - #167 - Add a section header for Notifications
             Card(modifier = Modifier.fillMaxWidth()){
                 // TODO - #173 - Add a "Show Days" row
-                // TODO - #174 - Add a "Task Reminder" row
                 Row(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(id = R.string.task_reminder), fontSize = 16.sp, modifier = Modifier.weight(1f))
+                    Text(text = stringResource(id = R.string.task_reminder).uppercase(), fontSize = 16.sp , modifier = Modifier.weight(1f).padding(start = 8.dp))
                     var taskReminderEnabled by remember { mutableStateOf(false) }
                     Switch(
                         checked = taskReminderEnabled,
