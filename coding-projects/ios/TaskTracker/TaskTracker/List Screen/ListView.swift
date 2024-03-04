@@ -17,7 +17,7 @@ struct ListView: View {
     }
     
     private var sortedDates: [String] {
-        groupedTasks.keys.sorted()
+        groupedTasks.keys.sorted().reversed()
     }
 
     var body: some View {
