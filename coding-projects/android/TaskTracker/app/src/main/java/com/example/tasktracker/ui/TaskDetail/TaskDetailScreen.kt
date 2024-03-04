@@ -141,7 +141,7 @@ import java.util.TimeZone
             ) {}
 
             OutlinedButton(
-                onClick = { },
+                onClick = { onNavigateToList() },
                 colors = ButtonDefaults.textButtonColors(
                     containerColor = Color.White, contentColor = Green
                 ),
