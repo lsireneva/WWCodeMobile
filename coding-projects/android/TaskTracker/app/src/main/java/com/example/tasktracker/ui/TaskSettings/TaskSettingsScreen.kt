@@ -2,28 +2,47 @@ package com.example.tasktracker.ui.TaskSettings
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tasktracker.R
+import com.example.tasktracker.ui.TaskList.TaskListScreen
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskSettingsScreen() {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,8 +74,18 @@ fun TaskSettingsScreen() {
                 // TODO - #166 - Add a Follow us on Twitter row with an icon and text
             }
             // TODO - #167 - Add a section header for Notifications
-            Card(modifier = Modifier.fillMaxWidth()){
-                // TODO - #173 - Add a "Show Days" row
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.small_padding)),
+                    horizontalArrangement = Arrangement
+                        .spacedBy(dimensionResource(R.dimen.small_padding))
+                ) {
+                    for (day in listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")) {
+                        DayOfWeekItem(day)
+                    }
+                }
                 // TODO - #174 - Add a "Task Reminder" row
                 // TODO - #175 - Add a "Show Badge" row
                 // TODO - #176 - Add a "Reminder Time" row
@@ -73,6 +102,17 @@ fun TaskSettingsScreen() {
             }
             VersionFooter(version = getFullVersionName())
         }
+    }
+
+@Composable
+fun DayOfWeekItem(day: String) {
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .background(color = Color.Gray, shape = CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(day)
     }
 }
 
@@ -101,3 +141,4 @@ fun getFullVersionName(): String {
     }
     return packageInfo?.versionName ?: "Unknown"
 }
+
