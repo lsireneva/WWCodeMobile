@@ -120,7 +120,6 @@ import com.example.tasktracker.ui.theme.Green
                     unfocusedLabelColor = Color.Gray,
                     cursorColor = Color.Gray,
                     focusedLabelColor = Color.Gray,
-                    textColor = Color.Black,
                     containerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
