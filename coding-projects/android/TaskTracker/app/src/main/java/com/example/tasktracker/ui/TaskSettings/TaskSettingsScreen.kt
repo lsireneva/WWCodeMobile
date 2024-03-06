@@ -2,13 +2,21 @@ package com.example.tasktracker.ui.TaskSettings
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -23,11 +31,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tasktracker.R
+
+@Preview(showBackground = true)
+@Composable
+fun TaskSettingsPreview() {
+    TaskSettingsScreen()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,6 +98,15 @@ fun TaskSettingsScreen() {
                 // TODO - #175 - Add a "Show Badge" row
                 // TODO - #176 - Add a "Reminder Time" row
             }
+            Card(
+                modifier = Modifier
+                    .padding(vertical = 8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent,
+                ),
+            ) {
+                WhatsNew()
+            }
             // TODO - #168 - Add a section header for "What's New?"
             Card(modifier = Modifier.fillMaxWidth()){
                 // TODO - #172 - Add a "Vote on Future Requests row"
@@ -98,10 +122,44 @@ fun TaskSettingsScreen() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun TaskSettingsPreview() {
-    TaskSettingsScreen()
+fun WhatsNew() {
+    Column(modifier = Modifier.clickable {
+
+    }) {
+        Row(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_whats_new),
+                contentDescription = null
+            )
+
+            Text(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                text = stringResource(id = R.string.whats_new),
+                color = Color.Black,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                Icons.Filled.KeyboardArrowRight, contentDescription = "go", tint = Color.Gray
+            )
+
+        }
+        Divider(
+            color = Color.Gray,
+            thickness = 0.5.dp,
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(start = 36.dp)
+                .fillMaxWidth()
+        )
+    }
 }
 
 @Composable
