@@ -22,6 +22,18 @@ class TaskRepository(application: Application) {
             this.taskDAO?.insertTask(newTask)
         }
     }
+    fun deleteTask(task: Task) {
+        AppDatabase.databaseQueryExecutor.execute {
+            taskDAO?.deleteTask(task)
+        }
+    }
+
+    fun updateTask(task: Task) {
+        AppDatabase.databaseQueryExecutor.execute {
+            taskDAO?.updateTask(task)
+        }
+    }
+
 
     //Static list for testing
     companion object {

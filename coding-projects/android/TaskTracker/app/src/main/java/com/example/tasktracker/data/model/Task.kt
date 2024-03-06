@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 /**
  * Created by Gauri Gadkari on 1/23/24.
  */
-@Entity
+@Entity(tableName = "table_task")
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
