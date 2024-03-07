@@ -75,6 +75,13 @@ fun TaskSettingsScreen() {
             }
             // TODO - #167 - Add a section header for Notifications
 
+            Column {
+                Text(
+                    stringResource(R.string.days),
+                    modifier = Modifier
+                        .padding(dimensionResource(R.dimen.small_padding)),
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -86,6 +93,7 @@ fun TaskSettingsScreen() {
                         DayOfWeekItem(day)
                     }
                 }
+            }
                 // TODO - #174 - Add a "Task Reminder" row
                 // TODO - #175 - Add a "Show Badge" row
                 // TODO - #176 - Add a "Reminder Time" row
@@ -112,7 +120,8 @@ fun DayOfWeekItem(day: String) {
             .background(color = Color.Gray, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Text(day)
+        Text(day,
+            style = MaterialTheme.typography.bodyMedium)
     }
 }
 
