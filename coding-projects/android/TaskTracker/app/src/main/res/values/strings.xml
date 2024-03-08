@@ -15,6 +15,6 @@
     <string name="cancel_popup_message">You have unsaved data, are you sure you want to close without saving?</string>
     <string name="whats_new">What\'s New</string>
     <string name="task_reminder">Task Reminder</string>
+    <string name="app_theme">App Theme</string>
+    <string name="arrow">Arrow</string>
 </resources>
-
-
