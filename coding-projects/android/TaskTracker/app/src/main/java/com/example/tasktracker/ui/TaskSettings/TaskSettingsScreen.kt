@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -122,7 +123,7 @@ fun TaskSettingsScreen() {
                 SettingsRow(
                     title = stringResource(id = R.string.app_theme),
                     imageId = R.drawable.baseline_palette_24,
-                    tintColor = Color.Gray
+                    colorRes = R.color.purple_500
                 )
                 // TODO - #170 - Add an App Icon row
             }
@@ -130,9 +131,8 @@ fun TaskSettingsScreen() {
         }
     }
 }
-
 @Composable
-fun SettingsRow(title: String, imageId: Int, tintColor: Color) {
+fun SettingsRow(title: String, imageId: Int, colorRes: Int) {
     Row(
         modifier = Modifier
             .padding(dimensionResource(R.dimen.medium_padding)),
@@ -140,7 +140,8 @@ fun SettingsRow(title: String, imageId: Int, tintColor: Color) {
         Icon(
             painter = painterResource(id = imageId),
             contentDescription = title,
-            modifier = Modifier.scale(1.5f)
+            modifier = Modifier.scale(1.5f),
+            tint = colorResource(colorRes)
         )
         Text(
             text = title,
@@ -155,7 +156,6 @@ fun SettingsRow(title: String, imageId: Int, tintColor: Color) {
         Icon(
             Icons.Default.KeyboardArrowRight,
             contentDescription = stringResource(id = R.string.arrow),
-            tint = tintColor
         )
     }
 }
