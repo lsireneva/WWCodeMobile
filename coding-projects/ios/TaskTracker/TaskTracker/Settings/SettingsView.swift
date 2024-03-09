@@ -15,7 +15,7 @@ struct SettingsView: View {
                 Section {
                     AboutUsView()
                     PrivacyView()
-                    // TODO: Add Tutorial row #111
+                    TutorialView()
                     RateAppView()
                     FollowOnTwitterView()
                 } header: {
@@ -221,6 +221,21 @@ private struct ReminderNotificationView: View {
             Spacer()
             Toggle(isOn: $canNotify) {}
                 .tint(.purple)
+        }
+    }
+}
+
+private struct TutorialView: View {
+
+    var body: some View {
+        HStack{
+            Image(systemName: "questionmark.video.fill")
+                .foregroundColor(.purple)
+                .font(Font.body.weight(.regular))
+                .imageScale(.large)
+            Text("Tutorial")
+            Spacer()
+            Image(systemName: "chevron.right")
         }
     }
 }
