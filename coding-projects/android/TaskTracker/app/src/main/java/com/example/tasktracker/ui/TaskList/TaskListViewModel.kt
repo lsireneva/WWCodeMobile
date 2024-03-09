@@ -4,14 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.data.model.Task
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
 /**
  * Created by Gauri Gadkari on 1/23/24.
  */
-class TaskListViewModel: ViewModel() {
+@HiltViewModel
+class TaskListViewModel @Inject constructor(private var respository: TaskRepository) : ViewModel() {
 
     /**
      * following hardcoded strings should eventually be replaced by data based on user input once
@@ -53,11 +57,4 @@ class TaskListViewModel: ViewModel() {
             )
         )
     )
-    companion object {
-        val factory : ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TaskListViewModel()
-            }
-        }
-    }
-}
+ }

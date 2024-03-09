@@ -1,15 +1,13 @@
 package com.example.tasktracker.data
 
-import androidx.room.Dao
-import androidx.room.Update
 import com.example.tasktracker.data.model.Task
 
 /**
- * Created by Gauri Gadkari on 1/23/24.
+ * defines methods in application
  */
-@Dao
-interface TaskDao {
+interface ITaskRepository {
+
     //todo replace with required method
-    @Update
     suspend fun updateTask(task: Task)
+
 }

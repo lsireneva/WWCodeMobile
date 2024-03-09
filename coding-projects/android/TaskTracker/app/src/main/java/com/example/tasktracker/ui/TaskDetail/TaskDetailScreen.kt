@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.ui.theme.Green
 import java.text.SimpleDateFormat
@@ -57,7 +58,7 @@ import java.util.TimeZone
  */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun TaskDetailScreen(onNavigateToList: () -> Unit) {
+    fun TaskDetailScreen(onNavigateToList: () -> Unit, viewModel: TaskDetailViewModel = hiltViewModel()) {
         val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember { mutableStateOf(false) }
 
         // Function to handle cancel confirmation

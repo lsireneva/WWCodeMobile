@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.data.model.Task
 
@@ -39,7 +39,7 @@ import com.example.tasktracker.data.model.Task
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    viewModel: TaskListViewModel = viewModel(factory = TaskListViewModel.factory),
+    viewModel: TaskListViewModel = hiltViewModel(),
     onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit
 ) {
     val allTasks by viewModel.getAllTasks().collectAsState(emptyList())
