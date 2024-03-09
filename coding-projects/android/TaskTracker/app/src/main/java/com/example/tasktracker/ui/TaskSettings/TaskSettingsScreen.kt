@@ -2,6 +2,8 @@ package com.example.tasktracker.ui.TaskSettings
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,12 +30,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tasktracker.R
+import com.example.tasktracker.TimeUtil
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskSettingsScreen() {
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,7 +70,7 @@ fun TaskSettingsScreen() {
             // TODO - #167 - Add a section header for Notifications
 
                 Text(
-                    stringResource(R.string.days),
+                    stringResource(R.string.days).uppercase(),
                     modifier = Modifier
                         .padding(dimensionResource(R.dimen.small_padding)),
                     style = MaterialTheme.typography.bodyMedium
@@ -79,8 +82,9 @@ fun TaskSettingsScreen() {
                     horizontalArrangement = Arrangement
                         .spacedBy(dimensionResource(R.dimen.small_padding))
                 ) {
-                    for (day in listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")) {
-                        DayOfWeekItem(day)
+                    for (day in TimeUtil.getDaysOfWeekShort()) {
+                            DayOfWeekItem(day)
+                        }
                     }
                 }
                 // TODO - #174 - Add a "Task Reminder" row
@@ -99,7 +103,7 @@ fun TaskSettingsScreen() {
             }
             VersionFooter(version = getFullVersionName())
         }
-    }
+
 
 @Composable
 fun DayOfWeekItem(day: String) {
@@ -114,6 +118,7 @@ fun DayOfWeekItem(day: String) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun TaskSettingsPreview() {
