@@ -9,7 +9,5 @@ import com.example.tasktracker.data.model.Task
  */
 @Dao
 interface TaskDao {
-    //todo replace with required method
-    @Update
-    suspend fun updateTask(task: Task)
+
 }

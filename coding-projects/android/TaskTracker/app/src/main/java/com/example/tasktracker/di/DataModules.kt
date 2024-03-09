@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 /**
  * This module provides dependencies related to
- * data processing and management using Hilt for dependency injection.
+ * data processing and management using Hilt for dependency injection(provides)
  */
 
 @Module
@@ -34,12 +34,4 @@ object DatabaseModule {
             "tasklist.db"
         ).build()
     }
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryModule{
-    @Singleton
-    @Binds
-    abstract fun bindTaskRepository(taskRepository: TaskRepository): ITaskRepository
 }
