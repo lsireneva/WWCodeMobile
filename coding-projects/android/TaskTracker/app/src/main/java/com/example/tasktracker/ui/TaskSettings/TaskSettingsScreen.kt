@@ -108,7 +108,7 @@ fun DayOfWeekItem(day: String) {
 
     val isToday = TimeUtil.isToday(day)
 
-    val backgroundColor = if (isToday) Color.LightGray else Color.Green
+    val backgroundColor = if (isToday) Color.Green else Color.LightGray
 
     Box(
         modifier = Modifier
