@@ -7,7 +7,7 @@ import com.example.tasktracker.data.model.Task
  */
 interface ITaskRepository {
 
-    //todo replace with required method
+    //TODO replace with required method
     suspend fun updateTask(task: Task)
 
 }
