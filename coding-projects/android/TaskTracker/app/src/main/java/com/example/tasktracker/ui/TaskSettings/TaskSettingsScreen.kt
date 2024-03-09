@@ -2,8 +2,6 @@ package com.example.tasktracker.ui.TaskSettings
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +31,7 @@ import com.example.tasktracker.R
 import com.example.tasktracker.TimeUtil
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskSettingsScreen() {
@@ -107,10 +105,15 @@ fun TaskSettingsScreen() {
 
 @Composable
 fun DayOfWeekItem(day: String) {
+
+    val isToday = TimeUtil.isToday(day)
+
+    val backgroundColor = if (isToday) Color.LightGray else Color.Green
+
     Box(
         modifier = Modifier
             .size(40.dp)
-            .background(color = Color.Gray, shape = CircleShape),
+            .background(color = backgroundColor, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Text(day,
@@ -118,7 +121,7 @@ fun DayOfWeekItem(day: String) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Preview(showBackground = true)
 @Composable
 fun TaskSettingsPreview() {

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.tasktracker"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.2.0-alpha02")
+    implementation("androidx.compose.material3:material3:1.2.0")
     // Viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // Coil
