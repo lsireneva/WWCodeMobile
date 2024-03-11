@@ -2,6 +2,10 @@ package com.example.tasktracker.ui.TaskSettings
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,15 +43,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tasktracker.R
+import com.example.tasktracker.TimeUtil
 
 @Preview(showBackground = true)
 @Composable
 fun TaskSettingsPreview() {
     TaskSettingsScreen()
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,8 +89,25 @@ fun TaskSettingsScreen() {
                 // TODO - #166 - Add a Follow us on Twitter row with an icon and text
             }
             // TODO - #167 - Add a section header for Notifications
+                Text(
+                    stringResource(R.string.days).uppercase(),
+                    modifier = Modifier
+                        .padding(dimensionResource(R.dimen.small_padding)),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.small_padding)),
+                    horizontalArrangement = Arrangement
+                        .spacedBy(dimensionResource(R.dimen.small_padding))
+                ) {
+                    for (day in TimeUtil.getDaysOfWeekShort()) {
+                            DayOfWeekItem(day)
+                        }
+                    }
+                }
             Card(modifier = Modifier.fillMaxWidth()){
-                // TODO - #173 - Add a "Show Days" row
                 Row(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -129,6 +152,23 @@ fun TaskSettingsScreen() {
             }
             VersionFooter(version = getFullVersionName())
         }
+
+
+@Composable
+fun DayOfWeekItem(day: String) {
+
+    val isToday = TimeUtil.isToday(day)
+
+    val backgroundColor = if (isToday) Color.Green else Color.LightGray
+
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .background(color = backgroundColor, shape = CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(day,
+            style = MaterialTheme.typography.bodyMedium)
     }
 }
 @Composable
@@ -159,6 +199,7 @@ fun SettingsRow(title: String, imageId: Int, colorRes: Int) {
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -219,3 +260,4 @@ fun getFullVersionName(): String {
     }
     return packageInfo?.versionName ?: "Unknown"
 }
+
