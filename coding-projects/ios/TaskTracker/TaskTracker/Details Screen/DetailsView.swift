@@ -8,6 +8,12 @@
 import SwiftUI
 import SwiftData
 
+enum Priority: String, CaseIterable, Codable {
+    case low = "Low"
+    case medium = "Medium"
+    case high = "High"
+}
+
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
@@ -21,6 +27,8 @@ struct DetailsScreen: View {
     @State private var showCancelConfirmationPopup: Bool = false
     @State private var startTime = Date.now
     @State private var endTime = Date.now
+    @State private var priority: Priority = .medium
+    var priorities: [Priority] = [.low, .medium, .high]
 
     let task: Task?
     let isEditingMode: Bool?
@@ -55,9 +63,19 @@ struct DetailsScreen: View {
                 .datePickerStyle(.compact)
                 .padding([.leading, .trailing])
                 
+                VStack(alignment: .leading) {
+                    LeftTitleText(text: "Priority")
+                    Picker("Picker", selection: $priority) {
+                        ForEach(Priority.allCases, id: \.self) {
+                            Text($0.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }.padding([.leading, .trailing])
+
                 Spacer()
                 
-                DoneButton(shouldDismiss: $shouldDismiss, taskText: $taskText, taskDate: $taskDate, startTime: $startTime, endTime: $endTime, task: task )
+                DoneButton(shouldDismiss: $shouldDismiss, taskText: $taskText, taskDate: $taskDate, startTime: $startTime, endTime: $endTime, priority: $priority, task: task)
                 Spacer()
             }
             .padding()
@@ -70,7 +88,13 @@ struct DetailsScreen: View {
             .onChange(of: shouldDismiss) {
                 if shouldDismiss {
                     if viewModel.task != nil {
-                        viewModel.updateTask(name: taskText, date: taskDate, startTime: startTime, endTime: endTime)
+                        viewModel.updateTask(
+                            name: taskText,
+                            date: taskDate,
+                            startTime: startTime,
+                            endTime: endTime,
+                            priority: priority
+                        )
 
                     }
 
@@ -82,6 +106,7 @@ struct DetailsScreen: View {
                 taskDate = task?.date ?? Date()
                 startTime = task?.startTime ?? Date.now
                 endTime = task?.endTime ?? Date.now
+                priority = task?.priority ?? .medium
             }
             // overlay for the whole screen
             .overlay(
@@ -164,6 +189,7 @@ struct DetailsScreen: View {
         @Binding var taskDate: Date
         @Binding var startTime: Date
         @Binding var endTime: Date
+        @Binding var priority: Priority
         let task: Task?
 
         var body: some View {
@@ -173,8 +199,9 @@ struct DetailsScreen: View {
                     currentTask.date = taskDate
                     currentTask.startTime = startTime
                     currentTask.endTime = endTime
+                    currentTask.priority = priority
                 } else {
-                    var newTask = Task(name: taskText, date: taskDate, startTime: startTime, endTime: endTime )
+                    var newTask = Task(name: taskText, date: taskDate, startTime: startTime, endTime: endTime, priority: priority)
                     modelContext.insert(newTask)
                 }
 

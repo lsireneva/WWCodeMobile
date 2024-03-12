@@ -15,12 +15,14 @@ class Task {
     var date: Date
     var startTime: Date
     var endTime: Date
-    
-    init(name: String = "", date: Date = .now, startTime: Date = .now, endTime: Date) {
+    var priority: Priority
+
+    init(name: String = "", date: Date = .now, startTime: Date = .now, endTime: Date, priority: Priority) {
         self.name = name
         self.date = date
         self.startTime = startTime
         self.endTime = endTime
+        self.priority = priority
     }
     // Calculate the duration between startTime and endTime
     var duration: String {
