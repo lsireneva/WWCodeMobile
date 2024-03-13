@@ -2,6 +2,10 @@ package com.example.tasktracker.ui.TaskSettings
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,12 +46,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tasktracker.R
+import com.example.tasktracker.TimeUtil
 
 @Preview(showBackground = true)
 @Composable
 fun TaskSettingsPreview() {
     TaskSettingsScreen()
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +82,7 @@ fun TaskSettingsScreen() {
         ) {
             Text(text = "This is the settings screen")
             // TODO - #156 - Add a section header for info and feedback, play with `fontSize` or `fontStyle` in your Text composable
-            Card(modifier = Modifier.fillMaxWidth()){
+            Card(modifier = Modifier.fillMaxWidth()) {
                 // TODO - #158 - Add an About Us row with an icon and a text
                 // TODO - #163 - Add a Privacy Policy row with an icon and a text
                 // TODO - #164 - Add a Tutorial row with an icon and text
@@ -83,15 +90,35 @@ fun TaskSettingsScreen() {
                 // TODO - #166 - Add a Follow us on Twitter row with an icon and text
             }
             // TODO - #167 - Add a section header for Notifications
-            Card(modifier = Modifier.fillMaxWidth()){
-                // TODO - #173 - Add a "Show Days" row
+            Text(
+                stringResource(R.string.days).uppercase(),
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.small_padding)),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.small_padding)),
+                horizontalArrangement = Arrangement
+                    .spacedBy(dimensionResource(R.dimen.small_padding))
+            ) {
+                for (day in TimeUtil.getDaysOfWeekShort()) {
+                    DayOfWeekItem(day)
+                }
+            }
+            Card(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(id = R.string.task_reminder).uppercase(), fontSize = 16.sp , modifier = Modifier.weight(1f).padding(start = 8.dp))
+                    Text(
+                        text = stringResource(id = R.string.task_reminder).uppercase(),
+                        fontSize = 16.sp,
+                        modifier = Modifier.weight(1f).padding(start = 8.dp)
+                    )
                     var taskReminderEnabled by remember { mutableStateOf(false) }
                     Switch(
                         checked = taskReminderEnabled,
@@ -113,7 +140,7 @@ fun TaskSettingsScreen() {
                 WhatsNew()
             }
             // TODO - #168 - Add a section header for "What's New?"
-            Card(modifier = Modifier.fillMaxWidth()){
+            Card(modifier = Modifier.fillMaxWidth()) {
                 // TODO - #172 - Add a "Vote on Future Requests row"
             }
 
@@ -131,6 +158,25 @@ fun TaskSettingsScreen() {
         }
     }
 }
+
+@Composable
+fun DayOfWeekItem(day: String) {
+
+    val isToday = TimeUtil.isToday(day)
+
+    val backgroundColor = if (isToday) Color.Green else Color.LightGray
+
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .background(color = backgroundColor, shape = CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(day,
+            style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
 @Composable
 fun SettingsRow(title: String, imageId: Int, colorRes: Int) {
     Row(
@@ -160,7 +206,7 @@ fun SettingsRow(title: String, imageId: Int, colorRes: Int) {
     }
 }
 
-@Preview(showBackground = true)
+
 @Composable
 fun WhatsNew() {
     Column(modifier = Modifier.clickable {
@@ -219,3 +265,4 @@ fun getFullVersionName(): String {
     }
     return packageInfo?.versionName ?: "Unknown"
 }
+

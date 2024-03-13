@@ -1,7 +1,6 @@
 package com.example.tasktracker.ui.TaskDetail
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -23,9 +22,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,8 +39,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasktracker.R
+import com.example.tasktracker.data.TaskRepository
+import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -56,9 +57,12 @@ import java.util.TimeZone
  * Screen to display task details and add, edit or delete task
  * Developed compose UI by Liubov Sireneva on 1/29/24
  */
-    @OptIn(ExperimentalMaterial3Api::class)
+
     @Composable
-    fun TaskDetailScreen(onNavigateToList: () -> Unit, viewModel: TaskDetailViewModel = hiltViewModel()) {
+    fun TaskDetailScreen(onNavigateToList: () -> Unit) {
+
+        val taskDetailViewModel: TaskDetailViewModel = viewModel()
+//    fun TaskDetailScreen(onNavigateToList: () -> Unit, viewModel: TaskDetailViewModel = hiltViewModel()) {
         val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember { mutableStateOf(false) }
 
         // Function to handle cancel confirmation
@@ -107,29 +111,15 @@ import java.util.TimeZone
 
             var textState by remember { mutableStateOf("") }
 
-            TextField(
+            OutlinedTextField(
                 value = textState,
                 onValueChange = { textState = it },
                 modifier = Modifier
                     .padding(dimensionResource(R.dimen.medium_padding))
                     .fillMaxWidth()
-                    .sizeIn(minHeight = dimensionResource(R.dimen.detail_textfield_min_height))
-                    .border(
-                        dimensionResource(R.dimen.detail_border_thickness),
-                        Color.Gray,
-                        RoundedCornerShape(5)
-                    ),
-                label = { Text(text = stringResource(id = R.string.textfield_label)) },
+                    .sizeIn(minHeight = dimensionResource(R.dimen.detail_textfield_min_height)),
+                placeholder = { Text(text = stringResource(id = R.string.textfield_label)) },
                 maxLines = 20,
-                colors = TextFieldDefaults.textFieldColors(
-                    unfocusedLabelColor = Color.Gray,
-                    cursorColor = Color.Gray,
-                    focusedLabelColor = Color.Gray,
-                    containerColor = Color.White,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
             )
 
             LabelButtonRow(

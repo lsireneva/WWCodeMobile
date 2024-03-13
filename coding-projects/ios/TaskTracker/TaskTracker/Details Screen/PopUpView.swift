@@ -12,14 +12,16 @@ struct PopUpView: View {
     let text: String
     let firstButtonText: String
     let secondButtonText: String?
+    let  okAction: (() -> Void)?
     @Binding var showButton: Bool
     @Binding var shouldDismiss: Bool
     @State private var offset: CGFloat = 1000
     
-    init(text: String, firstButtonText: String, secondButtonText: String?, showButton: Binding<Bool>, shouldDismiss: Binding<Bool>) {
+    init(text: String, firstButtonText: String, secondButtonText: String?, showButton: Binding<Bool>, shouldDismiss: Binding<Bool>, okAction: (() -> Void)? = nil) {
         self.text = text
         self.firstButtonText = firstButtonText
         self.secondButtonText = secondButtonText
+        self.okAction = okAction
         _showButton = showButton
         _shouldDismiss = shouldDismiss
     }
@@ -43,6 +45,7 @@ struct PopUpView: View {
 
             HStack {
                 Button {
+                    okAction?()
                     shouldDismiss.toggle()
                 } label: {
                     ZStack {
