@@ -59,10 +59,7 @@ import java.util.TimeZone
  */
 
     @Composable
-    fun TaskDetailScreen(onNavigateToList: () -> Unit) {
-
-        val taskDetailViewModel: TaskDetailViewModel = viewModel()
-//    fun TaskDetailScreen(onNavigateToList: () -> Unit, viewModel: TaskDetailViewModel = hiltViewModel()) {
+    fun TaskDetailScreen(onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel = hiltViewModel()) {
         val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember { mutableStateOf(false) }
 
         // Function to handle cancel confirmation

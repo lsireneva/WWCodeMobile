@@ -6,8 +6,7 @@ import com.example.tasktracker.data.model.Task
  * defines methods in application
  */
 interface ITaskRepository {
-
-    //TODO replace with required method
     suspend fun updateTask(task: Task)
-
+    suspend fun insertTask(task: Task)
+    suspend fun deleteTask(task: Task)
 }

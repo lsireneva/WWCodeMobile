@@ -12,16 +12,11 @@ import javax.inject.Inject
 /**
  * Created by Gauri Gadkari on 1/23/24.
  */
-class TaskDetailViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository: TaskRepository = TaskRepository(application)
-
-    fun insertTask(newTask: Task) {
-        repository.insertTask(newTask)
+@HiltViewModel
+class TaskDetailViewModel @Inject constructor(private var respository: TaskRepository) :
+    ViewModel() {
+    val allTasks: LiveData<List<Task>>? = respository.allTasks
+    suspend fun insertTask(task: Task) {
+        respository.insertTask(task)
     }
-
-    val allTasks: LiveData<List<Task>>? = repository.allTasks
 }
-//@HiltViewModel
-//class TaskDetailViewModel @Inject constructor(private var respository: TaskRepository) : ViewModel() {
-//}

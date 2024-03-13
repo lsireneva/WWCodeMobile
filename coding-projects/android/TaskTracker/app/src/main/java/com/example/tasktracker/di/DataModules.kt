@@ -3,10 +3,7 @@ package com.example.tasktracker.di
 import android.content.Context
 import androidx.room.Room
 import com.example.tasktracker.data.AppDatabase
-import com.example.tasktracker.data.ITaskRepository
-import com.example.tasktracker.data.TaskDao
-import com.example.tasktracker.data.TaskRepository
-import dagger.Binds
+import com.example.tasktracker.data.TaskDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
     @Provides
-    fun provideTaskDao(database: AppDatabase): TaskDao = database.taskDao()
+    fun provideTaskDao(database: AppDatabase): TaskDAO = database.taskDAO()
 
     @Singleton
     @Provides
@@ -31,7 +28,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
-            "tasklist.db"
+            "TaskList.db"
         ).build()
     }
 }
