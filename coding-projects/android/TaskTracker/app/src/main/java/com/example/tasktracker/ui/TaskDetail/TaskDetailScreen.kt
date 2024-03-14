@@ -51,252 +51,231 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-
 /**
  * Created by Gauri Gadkari on 1/23/24.
  * Screen to display task details and add, edit or delete task
  * Developed compose UI by Liubov Sireneva on 1/29/24
  */
-
-    @Composable
-    fun TaskDetailScreen(onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel = hiltViewModel()) {
-        val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember { mutableStateOf(false) }
-
-        // Function to handle cancel confirmation
-        val onCancelConfirmed = {
-            setShowCancelConfirmationPopup(false)
-            onNavigateToList()
-        }
-        OutlinedCard(
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-            ),
-            border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Color.Black),
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.medium_padding))
-                .wrapContentSize()
-                .verticalScroll(rememberScrollState()),
-            shape = RoundedCornerShape(dimensionResource(R.dimen.detail_card_shape))
-
-        ) {
-            val startTimeInfo = "08:22:10"
-            val endTimeInfo = "09:12:01"
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.medium_padding)),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.outline_delete_24),
-                        contentDescription = stringResource(id = R.string.delete),
-                    )
-                }
-                CancelButton(onClick = { setShowCancelConfirmationPopup(true) })
-            }
-
-            if (showCancelConfirmationPopup) {
-                ConfirmationDialog(
-                    message = stringResource(id = R.string.cancel_popup_message),
-                    onConfirm = onCancelConfirmed,
-                    onCancel = { setShowCancelConfirmationPopup(false) }
-                )
-            }
-
-            DetailDateButton()
-
-            var textState by remember { mutableStateOf("") }
-
-            OutlinedTextField(
-                value = textState,
-                onValueChange = { textState = it },
-                modifier = Modifier
-                    .padding(dimensionResource(R.dimen.medium_padding))
-                    .fillMaxWidth()
-                    .sizeIn(minHeight = dimensionResource(R.dimen.detail_textfield_min_height)),
-                placeholder = { Text(text = stringResource(id = R.string.textfield_label)) },
-                maxLines = 20,
-            )
-
-            LabelButtonRow(
-                label = stringResource(id = R.string.start_time_label).uppercase(),
-                buttonInfo = startTimeInfo
-            ) {}
-            LabelButtonRow(
-                label = stringResource(id = R.string.end_time_label).uppercase(),
-                buttonInfo = endTimeInfo
-            ) {}
-
-            OutlinedButton(
-                onClick = { onNavigateToList() },
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = Color.White, contentColor = Green
-                ),
-                border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Green),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(
-                        top = dimensionResource(R.dimen.detail_done_button_padding),
-                        bottom = dimensionResource(R.dimen.small_padding)
-                    ),
-                contentPadding = PaddingValues(
-                    horizontal = dimensionResource(R.dimen.detail_done_button_inside_padding),
-                    vertical = dimensionResource(R.dimen.small_padding)
-                )
-            ) {
-                Text(text = stringResource(id = R.string.done).uppercase())
-            }
-        }
+@Composable
+fun TaskDetailScreen(
+    onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel) {
+    val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember {
+        mutableStateOf(
+            false
+        )
     }
 
-    @Composable
-    fun DetailDateButton() {
-        var date by remember {
-            mutableStateOf(convertMillisToDate(Calendar.getInstance().timeInMillis))
-        }
-
-        var showDatePicker by remember { mutableStateOf(false) }
-
-        LabelButtonRow(
-            label = stringResource(id = R.string.date_label).uppercase(),
-            buttonInfo = date
-        ) { showDatePicker = true }
-
-        if (showDatePicker) {
-            DetailDatePickerDialog(
-                onDateSelected = { date = it },
-                onDismiss = { showDatePicker = false }
-            )
-        }
+    // Function to handle cancel confirmation
+    val onCancelConfirmed = {
+        setShowCancelConfirmationPopup(false)
+        onNavigateToList()
     }
+    OutlinedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+        border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Color.Black),
+        modifier = Modifier
+            .padding(dimensionResource(R.dimen.medium_padding))
+            .wrapContentSize()
+            .verticalScroll(rememberScrollState()),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.detail_card_shape))
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun DetailDatePickerDialog(
-        onDateSelected: (String) -> Unit,
-        onDismiss: () -> Unit
     ) {
-        val datePickerState = rememberDatePickerState()
-
-        val selectedDate = datePickerState.selectedDateMillis?.let {
-            convertMillisToDate(it)
-        } ?: ""
-
-
-        DatePickerDialog(
-            onDismissRequest = { onDismiss() },
-            confirmButton = {
-                Button(onClick = {
-                    onDateSelected(selectedDate)
-                    onDismiss()
-                }
-
-                ) {
-                    Text(text = stringResource(id = R.string.ok).uppercase())
-                }
-            },
-            dismissButton = {
-                Button(onClick = {
-                    onDismiss()
-                }) {
-                    Text(text = stringResource(id = R.string.cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
-
-    private fun convertMillisToDate(millis: Long): String {
-        val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-        formatter.timeZone = TimeZone.getTimeZone("UTC")
-        return formatter.format(Date(millis))
-    }
-
-    @Composable
-    fun LabelButtonRow(label: String, buttonInfo: String, onClick: () -> Unit) {
+        val startTimeInfo = "08:22:10"
+        val endTimeInfo = "09:12:01"
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = dimensionResource(R.dimen.medium_padding),
-                    vertical = dimensionResource(R.dimen.small_padding)
-                ),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(dimensionResource(R.dimen.medium_padding)),
+            horizontalArrangement = Arrangement.End
         ) {
-            Text(
-                text = label,
-                modifier = Modifier.align(Alignment.CenterVertically),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Button(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                shape = RoundedCornerShape(dimensionResource(R.dimen.detail_button_corner_shape)),
-                onClick = onClick,
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = Green, contentColor = Color.White
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.outline_delete_24),
+                    contentDescription = stringResource(id = R.string.delete),
                 )
-            ) {
-                Text(text = buttonInfo, fontSize = 12.sp)
             }
+            CancelButton(onClick = { setShowCancelConfirmationPopup(true) })
         }
-    }
 
-    @Composable
-    fun CancelButton(onClick: () -> Unit) {
-        IconButton(onClick = onClick) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_cancel_24),
-                contentDescription = stringResource(id = R.string.cancel),
-                tint = Color.Red
+        if (showCancelConfirmationPopup) {
+            ConfirmationDialog(message = stringResource(id = R.string.cancel_popup_message),
+                onConfirm = onCancelConfirmed,
+                onCancel = { setShowCancelConfirmationPopup(false) })
+        }
+
+        DetailDateButton()
+
+        var textState by remember { mutableStateOf("") }
+
+        OutlinedTextField(
+            value = textState,
+            onValueChange = { textState = it },
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.medium_padding))
+                .fillMaxWidth()
+                .sizeIn(minHeight = dimensionResource(R.dimen.detail_textfield_min_height)),
+            placeholder = { Text(text = stringResource(id = R.string.textfield_label)) },
+            maxLines = 20,
+        )
+
+        LabelButtonRow(
+            label = stringResource(id = R.string.start_time_label).uppercase(),
+            buttonInfo = startTimeInfo
+        ) {}
+        LabelButtonRow(
+            label = stringResource(id = R.string.end_time_label).uppercase(),
+            buttonInfo = endTimeInfo
+        ) {}
+
+        OutlinedButton(
+            onClick = { onNavigateToList() },
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = Color.White, contentColor = Green
+            ),
+            border = BorderStroke(dimensionResource(R.dimen.detail_border_thickness), Green),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(
+                    top = dimensionResource(R.dimen.detail_done_button_padding),
+                    bottom = dimensionResource(R.dimen.small_padding)
+                ),
+            contentPadding = PaddingValues(
+                horizontal = dimensionResource(R.dimen.detail_done_button_inside_padding),
+                vertical = dimensionResource(R.dimen.small_padding)
             )
+        ) {
+            Text(text = stringResource(id = R.string.done).uppercase())
         }
     }
+}
 
-    @Composable
-    fun ConfirmationDialog(
-        message: String,
-        onConfirm: () -> Unit,
-        onCancel: () -> Unit
+@Composable
+fun DetailDateButton() {
+    var date by remember {
+        mutableStateOf(convertMillisToDate(Calendar.getInstance().timeInMillis))
+    }
+
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    LabelButtonRow(
+        label = stringResource(id = R.string.date_label).uppercase(), buttonInfo = date
+    ) { showDatePicker = true }
+
+    if (showDatePicker) {
+        DetailDatePickerDialog(onDateSelected = { date = it },
+            onDismiss = { showDatePicker = false })
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailDatePickerDialog(
+    onDateSelected: (String) -> Unit, onDismiss: () -> Unit
+) {
+    val datePickerState = rememberDatePickerState()
+
+    val selectedDate = datePickerState.selectedDateMillis?.let {
+        convertMillisToDate(it)
+    } ?: ""
+
+
+    DatePickerDialog(onDismissRequest = { onDismiss() }, confirmButton = {
+        Button(onClick = {
+            onDateSelected(selectedDate)
+            onDismiss()
+        }
+
+        ) {
+            Text(text = stringResource(id = R.string.ok).uppercase())
+        }
+    }, dismissButton = {
+        Button(onClick = {
+            onDismiss()
+        }) {
+            Text(text = stringResource(id = R.string.cancel))
+        }
+    }) {
+        DatePicker(state = datePickerState)
+    }
+}
+
+private fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    formatter.timeZone = TimeZone.getTimeZone("UTC")
+    return formatter.format(Date(millis))
+}
+
+@Composable
+fun LabelButtonRow(label: String, buttonInfo: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = dimensionResource(R.dimen.medium_padding),
+                vertical = dimensionResource(R.dimen.small_padding)
+            ), horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        AlertDialog(
-            onDismissRequest = onCancel,
-            text = { Text(text = message) },
-            confirmButton = {
-                Button(
-                    onClick = { onConfirm() }
-                ) {
-                    Text(text = stringResource(id = R.string.ok))
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = { onCancel() }
-                ) {
-                    Text(text = stringResource(id = R.string.cancel))
-                }
-            }
+        Text(
+            text = label,
+            modifier = Modifier.align(Alignment.CenterVertically),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Button(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.detail_button_corner_shape)),
+            onClick = onClick,
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = Green, contentColor = Color.White
+            )
+        ) {
+            Text(text = buttonInfo, fontSize = 12.sp)
+        }
+    }
+}
+
+@Composable
+fun CancelButton(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(id = R.drawable.baseline_cancel_24),
+            contentDescription = stringResource(id = R.string.cancel),
+            tint = Color.Red
         )
     }
+}
+
+@Composable
+fun ConfirmationDialog(
+    message: String, onConfirm: () -> Unit, onCancel: () -> Unit
+) {
+    AlertDialog(onDismissRequest = onCancel, text = { Text(text = message) }, confirmButton = {
+        Button(onClick = { onConfirm() }) {
+            Text(text = stringResource(id = R.string.ok))
+        }
+    }, dismissButton = {
+        Button(onClick = { onCancel() }) {
+            Text(text = stringResource(id = R.string.cancel))
+        }
+    })
+}
 
 
-    @Preview(showBackground = true)
-    @Composable
-    fun TaskDetailScreenPreview() {
-        TaskDetailScreen(onNavigateToList = {})
-    }
+@Preview(showBackground = true)
+@Composable
+fun TaskDetailScreenPreview() {
+    TaskDetailScreen(onNavigateToList = {}, viewModel())
+}
 
-    @Preview(showBackground = true)
-    @Composable
-    fun ConfirmationDialogPreview() {
-        ConfirmationDialog(
-            message = stringResource(id = R.string.cancel_popup_message),
-            onConfirm = {  },
-            onCancel = {  }
-        )
-    }
+@Preview(showBackground = true)
+@Composable
+fun ConfirmationDialogPreview() {
+    ConfirmationDialog(message = stringResource(id = R.string.cancel_popup_message),
+        onConfirm = { },
+        onCancel = { })
+}
 

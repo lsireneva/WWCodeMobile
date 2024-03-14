@@ -7,11 +7,11 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
 /**
  * This module provides dependencies related to
  * data processing and management using Hilt for dependency injection (bind)
  */
-
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {

@@ -15,7 +15,6 @@ import javax.inject.Singleton
  * This module provides dependencies related to
  * data processing and management using Hilt for dependency injection(provides)
  */
-
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {

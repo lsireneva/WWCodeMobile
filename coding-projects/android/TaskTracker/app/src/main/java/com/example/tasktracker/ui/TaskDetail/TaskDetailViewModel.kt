@@ -1,7 +1,5 @@
 package com.example.tasktracker.ui.TaskDetail
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.tasktracker.data.TaskRepository
