@@ -8,12 +8,6 @@
 import SwiftUI
 import SwiftData
 
-enum Priority: String, CaseIterable, Codable {
-    case low = "Low"
-    case medium = "Medium"
-    case high = "High"
-}
-
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
