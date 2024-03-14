@@ -43,14 +43,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
+import com.example.tasktracker.TimeUtil
 import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+
 
 
 /**
@@ -148,7 +147,7 @@ import java.util.TimeZone
     @Composable
     fun DetailDateButton() {
         var date by remember {
-            mutableStateOf(convertMillisToDate(Calendar.getInstance().timeInMillis))
+            mutableStateOf(TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis))
         }
 
         var showDatePicker by remember { mutableStateOf(false) }
@@ -176,7 +175,7 @@ import java.util.TimeZone
         val datePickerState = rememberDatePickerState()
 
         val selectedDate = datePickerState.selectedDateMillis?.let {
-            convertMillisToDate(it)
+            TimeUtil.convertMillisToDate(it)
         } ?: ""
 
 
@@ -204,16 +203,12 @@ import java.util.TimeZone
         }
     }
 
-    private fun convertMillisToDate(millis: Long): String {
-        val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-        formatter.timeZone = TimeZone.getTimeZone("UTC")
-        return formatter.format(Date(millis))
-    }
+
 
 @Composable
 fun StartTimeButton() {
     var startTime by remember {
-        mutableStateOf(convertTime(Calendar.getInstance().time))
+        mutableStateOf(TimeUtil.convertTime(Calendar.getInstance().time))
     }
     var showTimePicker by remember { mutableStateOf(false) }
     LabelButtonRow(
@@ -232,7 +227,7 @@ fun StartTimeButton() {
 @Composable
 fun EndTimeButton() {
     var endTime by remember {
-        mutableStateOf(convertTime(Calendar.getInstance().time))
+        mutableStateOf(TimeUtil.convertTime(Calendar.getInstance().time))
     }
     var showTimePicker by remember { mutableStateOf(false) }
     LabelButtonRow(
@@ -303,11 +298,6 @@ fun TimePickerDialog(
             }
         }
     )
-}
-
-private fun convertTime(time: Date): String {
-    val formatter = SimpleDateFormat("HH:mm")
-    return formatter.format(time).toString()
 }
 
     @Composable
