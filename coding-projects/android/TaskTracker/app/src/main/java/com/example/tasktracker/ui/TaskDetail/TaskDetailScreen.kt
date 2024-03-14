@@ -286,7 +286,7 @@ fun TimePickerDialog(
 ) {
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(text = "Select Time") },
+        title = { Text(text = stringResource(id = R.string.select_time)) },
         text = { content() },
         confirmButton = {
             Button(
@@ -336,7 +336,7 @@ private fun convertTime(time: Date): String {
                     containerColor = Green, contentColor = Color.White
                 )
             ) {
-                Text(text = buttonInfo, fontSize = 12.sp)
+                Text(text = buttonInfo, fontSize = 14.sp)
             }
         }
     }

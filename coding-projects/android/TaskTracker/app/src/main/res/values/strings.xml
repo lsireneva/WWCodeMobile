@@ -18,4 +18,5 @@
     <string name="task_reminder">Task Reminder</string>
     <string name="app_theme">App Theme</string>
     <string name="arrow">Arrow</string>
+    <string name="select_time">Select time</string>
 </resources>
