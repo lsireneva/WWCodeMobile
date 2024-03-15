@@ -118,8 +118,8 @@ import java.util.Calendar
                 maxLines = 20,
             )
 
-            StartTimeButton()
-            EndTimeButton()
+            TimePickerRow(stringResource(id = R.string.start_time_label))
+            TimePickerRow(stringResource(id = R.string.end_time_label))
 
             OutlinedButton(
                 onClick = { onNavigateToList() },
@@ -205,38 +205,19 @@ import java.util.Calendar
 
 
 @Composable
-fun StartTimeButton() {
-    var startTime by remember {
+fun TimePickerRow(timeRowLabel: String) {
+    var time by remember {
         mutableStateOf(TimeUtil.convertTime(Calendar.getInstance().time))
     }
     var showTimePicker by remember { mutableStateOf(false) }
     LabelButtonRow(
-        label = stringResource(id = R.string.start_time_label).uppercase(),
-        buttonInfo = startTime
+        label = timeRowLabel.uppercase(),
+        buttonInfo = time
     ) { showTimePicker = true }
 
     if (showTimePicker) {
         DetailTimePickerDialog(
-            onTimeSelected = { startTime = it },
-            onDismiss = { showTimePicker = false }
-        )
-    }
-}
-
-@Composable
-fun EndTimeButton() {
-    var endTime by remember {
-        mutableStateOf(TimeUtil.convertTime(Calendar.getInstance().time))
-    }
-    var showTimePicker by remember { mutableStateOf(false) }
-    LabelButtonRow(
-        label = stringResource(id = R.string.end_time_label).uppercase(),
-        buttonInfo = endTime
-    ) { showTimePicker = true }
-
-    if (showTimePicker) {
-        DetailTimePickerDialog(
-            onTimeSelected = { endTime = it },
+            onTimeSelected = { time = it },
             onDismiss = { showTimePicker = false }
         )
     }
