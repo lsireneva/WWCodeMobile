@@ -1,12 +1,12 @@
 package com.example.tasktracker.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.tasktracker.data.model.Task
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Gauri Gadkari on 1/23/24.
@@ -26,6 +26,6 @@ interface TaskDAO {
     fun deleteAllTasks()
 
     @Query("SELECT * FROM table_task ORDER BY id")
-    fun getAllTasks(): LiveData<List<Task>>
+    fun getAllTasks(): Flow<List<Task>>
 
 }
