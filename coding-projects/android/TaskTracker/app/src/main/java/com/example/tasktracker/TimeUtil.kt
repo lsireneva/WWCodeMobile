@@ -28,7 +28,7 @@ class TimeUtil {
         }
 
         fun convertTime(time: Date): String {
-            val formatter = SimpleDateFormat("HH:mm")
+            val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
             return formatter.format(time).toString()
         }
     }

@@ -47,7 +47,6 @@ import com.example.tasktracker.TimeUtil
 import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
-import java.text.SimpleDateFormat
 import java.util.Calendar
 
 
@@ -246,26 +245,25 @@ fun EndTimeButton() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailTimePickerDialog(onTimeSelected: (String) -> Unit, onDismiss: () -> Unit) {
-    val currentTime = Calendar.getInstance().time
-    val formatterH = SimpleDateFormat("HH")
-    val formatterM = SimpleDateFormat("mm")
+
+    val currentTime = TimeUtil.convertTime(Calendar.getInstance().time)
+    val (hour, minute) = currentTime.split(":")
+
 
     val timePickerState = rememberTimePickerState(
-        initialHour = formatterH.format(currentTime).toInt(),
-        initialMinute = formatterM.format(currentTime).toInt(),
+        initialHour = hour.toInt(),
+        initialMinute = minute.toInt(),
         is24Hour = false
     )
-    val selectedHour = String.format("%02d", timePickerState.hour)
-    val selectedMinutes = String.format("%02d", timePickerState.minute)
-    val selectedTime = "${selectedHour}:${selectedMinutes}"
+    val selectedTime = String.format("%02d:%02d", timePickerState.hour, timePickerState.minute)
+
 
     TimePickerDialog(
         onDismissRequest = { onDismiss() },
         onConfirm = {
             onTimeSelected(selectedTime)
             onDismiss()
-        },
-        onCancel = { onDismiss() }
+        }
     )
     {
         TimePicker(state = timePickerState)
@@ -276,11 +274,10 @@ fun DetailTimePickerDialog(onTimeSelected: (String) -> Unit, onDismiss: () -> Un
 fun TimePickerDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    onCancel: () -> Unit,
     content: @Composable () -> Unit,
 ) {
     AlertDialog(
-        onDismissRequest = onCancel,
+        onDismissRequest = { onDismissRequest() },
         title = { Text(text = stringResource(id = R.string.select_time)) },
         text = { content() },
         confirmButton = {
@@ -292,7 +289,7 @@ fun TimePickerDialog(
         },
         dismissButton = {
             Button(
-                onClick = { onCancel() }
+                onClick = { onDismissRequest() }
             ) {
                 Text(text = stringResource(id = R.string.cancel))
             }
