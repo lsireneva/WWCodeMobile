@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.data.model.Task
 
@@ -39,22 +39,15 @@ import com.example.tasktracker.data.model.Task
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    viewModel: TaskListViewModel = hiltViewModel(),
-    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit
+    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit, taskListViewModel: TaskListViewModel
 ) {
-    val allTasks by viewModel.getAllTasks().collectAsState(emptyList())
+    val allTasks by taskListViewModel.getAllTasks().collectAsState(emptyList())
 
-    Scaffold(
-        topBar = {
-            ListScreenTopAppBar(
-                { onNavigateToSettings() },
-                { onNavigateToDetail() }
-            )
-        }
-    ) {
+    Scaffold(topBar = {
+        ListScreenTopAppBar({ onNavigateToSettings() }, { onNavigateToDetail() })
+    }) {
         TaskList(
-            taskList = allTasks,
-            modifier = Modifier
+            taskList = allTasks, modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
         )
@@ -63,12 +56,10 @@ fun TaskListScreen(
 
 @Composable
 fun TaskList(
-    taskList: List<Task>,
-    modifier: Modifier = Modifier
+    taskList: List<Task>, modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.medium_padding)),
+        modifier = modifier.padding(dimensionResource(R.dimen.medium_padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium_padding)),
     ) {
         item {
@@ -87,8 +78,7 @@ fun TaskList(
 
             items(tasks) { task ->
                 TaskCard(
-                    task = task,
-                    modifier = Modifier
+                    task = task, modifier = Modifier
                         .fillMaxWidth()
                         .border(
                             dimensionResource(R.dimen.border_thickness),
@@ -120,40 +110,34 @@ fun Header(text: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreenTopAppBar(
-    onNavigateToSettings: () -> Unit,
-    onNavigateToDetail: () -> Unit
+    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit
 ) {
-    TopAppBar(
-        title = {
-            Column(
-                modifier = Modifier
-                    .padding
-                        (
-                        start = dimensionResource(R.dimen.app_bar_padding),
-                        top = dimensionResource(R.dimen.app_bar_padding)
-                    )
-            ) {
-                Text(
-                    text = stringResource(R.string.timer),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 28.sp
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { onNavigateToDetail() }) {
-                Icon(
-                    Icons.Filled.AddCircle,
-                    contentDescription = stringResource(R.string.add_button)
-                )
-            }
-            IconButton(onClick = { onNavigateToSettings() }) {
-                Icon(
-                    painterResource(id = R.drawable.baseline_settings_24),
-                    contentDescription = stringResource(id = R.string.settings)
-                )
-            }
+    TopAppBar(title = {
+        Column(
+            modifier = Modifier.padding(
+                start = dimensionResource(R.dimen.app_bar_padding),
+                top = dimensionResource(R.dimen.app_bar_padding)
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.timer),
+                fontWeight = FontWeight.Medium,
+                fontSize = 28.sp
+            )
         }
+    }, actions = {
+        IconButton(onClick = { onNavigateToDetail() }) {
+            Icon(
+                Icons.Filled.AddCircle, contentDescription = stringResource(R.string.add_button)
+            )
+        }
+        IconButton(onClick = { onNavigateToSettings() }) {
+            Icon(
+                painterResource(id = R.drawable.baseline_settings_24),
+                contentDescription = stringResource(id = R.string.settings)
+            )
+        }
+    }
 
     )
 }
@@ -162,10 +146,7 @@ fun ListScreenTopAppBar(
 @Preview(showBackground = true)
 @Composable
 private fun TopAppBarPreview() {
-    ListScreenTopAppBar(
-        onNavigateToSettings = {},
-        onNavigateToDetail = {}
-    )
+    ListScreenTopAppBar(onNavigateToSettings = {}, onNavigateToDetail = {})
 }
 
 @Preview(showBackground = true)
@@ -184,6 +165,6 @@ private fun TaskListPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ListScreenPreview() {
-    TaskListScreen(onNavigateToSettings = {}, onNavigateToDetail = {})
+    TaskListScreen(onNavigateToSettings = {}, onNavigateToDetail = {}, viewModel())
 }
 
