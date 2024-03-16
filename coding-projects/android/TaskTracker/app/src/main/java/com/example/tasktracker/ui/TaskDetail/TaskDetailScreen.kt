@@ -42,11 +42,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.TimeUtil
-import com.example.tasktracker.data.TaskRepository
-import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
 import java.util.Calendar
 
