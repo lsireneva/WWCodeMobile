@@ -24,7 +24,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,14 +44,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tasktracker.R
+import com.example.tasktracker.TimeUtil
 import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+
 
 /**
  * Created by Gauri Gadkari on 1/23/24.
@@ -58,7 +58,8 @@ import java.util.TimeZone
  */
 @Composable
 fun TaskDetailScreen(
-    onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel) {
+    onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel
+) {
     val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember {
         mutableStateOf(
             false
@@ -82,8 +83,6 @@ fun TaskDetailScreen(
         shape = RoundedCornerShape(dimensionResource(R.dimen.detail_card_shape))
 
     ) {
-        val startTimeInfo = "08:22:10"
-        val endTimeInfo = "09:12:01"
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -120,14 +119,8 @@ fun TaskDetailScreen(
             maxLines = 20,
         )
 
-        LabelButtonRow(
-            label = stringResource(id = R.string.start_time_label).uppercase(),
-            buttonInfo = startTimeInfo
-        ) {}
-        LabelButtonRow(
-            label = stringResource(id = R.string.end_time_label).uppercase(),
-            buttonInfo = endTimeInfo
-        ) {}
+        TimePickerRow(stringResource(id = R.string.start_time_label))
+        TimePickerRow(stringResource(id = R.string.end_time_label))
 
         OutlinedButton(
             onClick = { onNavigateToList() },
@@ -154,7 +147,7 @@ fun TaskDetailScreen(
 @Composable
 fun DetailDateButton() {
     var date by remember {
-        mutableStateOf(convertMillisToDate(Calendar.getInstance().timeInMillis))
+        mutableStateOf(TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis))
     }
 
     var showDatePicker by remember { mutableStateOf(false) }
@@ -178,7 +171,7 @@ fun DetailDatePickerDialog(
     val datePickerState = rememberDatePickerState()
 
     val selectedDate = datePickerState.selectedDateMillis?.let {
-        convertMillisToDate(it)
+        TimeUtil.convertMillisToDate(it)
     } ?: ""
 
 
@@ -202,10 +195,64 @@ fun DetailDatePickerDialog(
     }
 }
 
-private fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-    formatter.timeZone = TimeZone.getTimeZone("UTC")
-    return formatter.format(Date(millis))
+
+@Composable
+fun TimePickerRow(timeRowLabel: String) {
+    var time by remember {
+        mutableStateOf(TimeUtil.convertTime(Calendar.getInstance().time))
+    }
+    var showTimePicker by remember { mutableStateOf(false) }
+    LabelButtonRow(
+        label = timeRowLabel.uppercase(), buttonInfo = time
+    ) { showTimePicker = true }
+
+    if (showTimePicker) {
+        DetailTimePickerDialog(onTimeSelected = { time = it },
+            onDismiss = { showTimePicker = false })
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailTimePickerDialog(onTimeSelected: (String) -> Unit, onDismiss: () -> Unit) {
+
+    val currentTime = TimeUtil.convertTime(Calendar.getInstance().time)
+    val (hour, minute) = currentTime.split(":")
+
+
+    val timePickerState = rememberTimePickerState(
+        initialHour = hour.toInt(), initialMinute = minute.toInt(), is24Hour = false
+    )
+    val selectedTime = String.format("%02d:%02d", timePickerState.hour, timePickerState.minute)
+
+
+    TimePickerDialog(onDismissRequest = { onDismiss() }, onConfirm = {
+        onTimeSelected(selectedTime)
+        onDismiss()
+    }) {
+        TimePicker(state = timePickerState)
+    }
+}
+
+@Composable
+fun TimePickerDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    AlertDialog(onDismissRequest = { onDismissRequest() },
+        title = { Text(text = stringResource(id = R.string.select_time)) },
+        text = { content() },
+        confirmButton = {
+            Button(onClick = { onConfirm() }) {
+                Text(text = stringResource(id = R.string.ok))
+            }
+        },
+        dismissButton = {
+            Button(onClick = { onDismissRequest() }) {
+                Text(text = stringResource(id = R.string.cancel))
+            }
+        })
 }
 
 @Composable
@@ -233,7 +280,7 @@ fun LabelButtonRow(label: String, buttonInfo: String, onClick: () -> Unit) {
                 containerColor = Green, contentColor = Color.White
             )
         ) {
-            Text(text = buttonInfo, fontSize = 12.sp)
+            Text(text = buttonInfo, fontSize = 14.sp)
         }
     }
 }

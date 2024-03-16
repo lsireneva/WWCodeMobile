@@ -28,7 +28,7 @@ struct ListView: View {
                         ForEach(groupedTasks[date] ?? [], id: \.id) { task in
                             ZStack {
                                 let duration = viewModel.formatDuration(start: task.startTime, end: task.endTime)
-                                ActivityItemView(name: task.name, duration: duration)
+                                ActivityItemView(name: task.name, duration: duration, priority: task.priority.rawValue)
                                     .listRowSeparator(.hidden)
 
                                 NavigationLink(destination: DetailsScreen(task: task, isEditingMode: true), label: {})
@@ -47,12 +47,22 @@ struct ListView: View {
 struct ActivityItemView: View {
     let name: String
     let duration: String
+    let priority: String
 
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             Text(name)
             Spacer()
-            Text(duration)
+            VStack(alignment: .trailing) {
+                Text(duration)
+                Text(priority)
+                    .bold()
+                    .font(.caption2)
+                    .padding(8)
+                    .background(Color.purple)
+                    .cornerRadius(8)
+                    .foregroundColor(.white)
+            }
         }
         .padding()
         .overlay(
@@ -61,6 +71,7 @@ struct ActivityItemView: View {
         )
     }
 }
+
 
 #Preview {
     ListView(viewModel: ListViewModel())

@@ -16,13 +16,14 @@ class DetailsViewModel: ObservableObject {
         self.task = task
     }
     
-    func updateTask(name: String, date: Date, startTime: Date, endTime: Date) {
+    func updateTask(name: String, date: Date, startTime: Date, endTime: Date, priority: Priority) {
         // If `task` is `nil`, then nothing needs to be updated
         guard let task = task else { return }
         task.name = name
         task.date = date
         task.startTime = startTime
         task.endTime = endTime
+        task.priority = priority
     }
 }
 
