@@ -1,16 +1,20 @@
 package com.example.tasktracker
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.example.tasktracker.data.AppDatabase
 import com.example.tasktracker.data.TaskDAO
+import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.data.model.Task
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -24,7 +28,7 @@ import java.util.concurrent.TimeoutException
 
 @RunWith(AndroidJUnit4::class)
 class AppDatabaseTest {
-
+    private lateinit var repository: TaskRepository
     private lateinit var database: AppDatabase
     private lateinit var taskDAO: TaskDAO
 
@@ -33,9 +37,9 @@ class AppDatabaseTest {
         // Context of the app under test.
         val context = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .allowMainThreadQueries()
             .build()
         taskDAO = database.taskDAO()
+        repository = TaskRepository(taskDAO)
     }
 
     @After
@@ -53,40 +57,34 @@ class AppDatabaseTest {
         val task = Task(activityName = "Test Activity", date = "2024-03-04", startTimeInMillis = 500, endTimeInMillis = 1000, duration = "1h")
 
         // When inserting a task
-        taskDAO.insertTask(task)
+        repository.insertTask(task)
 
         // Then the task can be retrieved
-        val allTasks = getOrAwaitValueMainThread(taskDAO.getAllTasks())
+        val allTasks: List<Task> = getOrAwaitValueMainThread(repository.allTasks)
         assertEquals("Test Activity", allTasks[0].activityName)
     }
 
-    // Util function for LiveData testing on the main thread
-    private fun <T> getOrAwaitValueMainThread(liveData: LiveData<T>): T {
+    // Util function for Flow testing on the main thread
+    private fun <T> getOrAwaitValueMainThread(flowData: Flow<List<Task>>): T {
         var data: T? = null
         val latch = CountDownLatch(1)
-        val observer = Observer<T> { o ->
-            data = o
-            latch.countDown()
-        }
-
-        InstrumentationRegistry.getInstrumentation().runOnMainSync {
-            liveData.observeForever(observer)
+        val mainScope = MainScope()
+        mainScope.launch {
+            flowData
+                .flowOn(Dispatchers.IO)
+                .collect{value ->
+                    data = value as T
+                    latch.countDown()
+                }
         }
 
         try {
-            if (!latch.await(2, TimeUnit.SECONDS)) {
-                throw TimeoutException("LiveData value was never set.")
+            if(!latch.await(2, TimeUnit.SECONDS)){
+                throw TimeoutException("Flow value was never collected")
             }
-        } finally {
-            InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                liveData.removeObserver(observer)
-            }
+        }finally {
+            mainScope.cancel()
         }
-
-        @Suppress("UNCHECKED_CAST")
-        return data as T
+        return data ?: throw NullPointerException("Flow value was null")
     }
-
-
-
 }
