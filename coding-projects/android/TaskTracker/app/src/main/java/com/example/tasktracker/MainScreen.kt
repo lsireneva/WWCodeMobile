@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tasktracker.navigation.NavScreens
+import com.example.tasktracker.navigation.NavScreens.TaskArgs.TASK_ID_ARG
 import com.example.tasktracker.ui.TaskDetail.TaskDetailScreen
 import com.example.tasktracker.ui.TaskDetail.TaskDetailViewModel
 import com.example.tasktracker.ui.TaskList.TaskListScreen
@@ -20,14 +21,14 @@ fun MainScreen() {
             val viewModel = hiltViewModel<TaskListViewModel>()
             TaskListScreen(
                 onNavigateToSettings = { navController.navigate(NavScreens.TaskSettings.route) },
-                onNavigateToDetail = { navController.navigate(NavScreens.TaskDetail.route) },
+                onNavigateToDetail = { navController.navigate("${NavScreens.TaskDetail.route}/${it}") },
                 taskListViewModel = viewModel
             )
         }
         composable(NavScreens.TaskSettings.route) {
             TaskSettingsScreen()
         }
-        composable(NavScreens.TaskDetail.route) {
+        composable("${NavScreens.TaskDetail.route}/{$TASK_ID_ARG}") {
             val viewModel = hiltViewModel<TaskDetailViewModel>()
             TaskDetailScreen(
                 onNavigateToList = { navController.navigate(NavScreens.TaskList.route) },

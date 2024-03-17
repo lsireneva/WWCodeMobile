@@ -28,6 +28,7 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +64,8 @@ fun TaskDetailScreen(
         )
     }
 
+    val showDeleteButton by taskDetailViewModel.showDeleteButton.collectAsState()
+
     // Function to handle cancel confirmation
     val onCancelConfirmed = {
         setShowCancelConfirmationPopup(false)
@@ -86,11 +89,13 @@ fun TaskDetailScreen(
                 .padding(dimensionResource(R.dimen.medium_padding)),
             horizontalArrangement = Arrangement.End
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.outline_delete_24),
-                    contentDescription = stringResource(id = R.string.delete),
-                )
+            if (showDeleteButton) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_delete_24),
+                        contentDescription = stringResource(id = R.string.delete),
+                    )
+                }
             }
             CancelButton(onClick = { setShowCancelConfirmationPopup(true) })
         }
