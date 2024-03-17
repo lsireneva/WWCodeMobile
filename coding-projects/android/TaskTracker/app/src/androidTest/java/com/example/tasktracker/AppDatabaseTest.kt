@@ -54,7 +54,7 @@ class AppDatabaseTest {
     @Throws(Exception::class)
     fun insertTaskAndReadInList() = runTest {
         // Given a Task
-        val task = Task(activityName = "Test Activity", date = "2024-03-04", startTimeInMillis = 500, endTimeInMillis = 1000, duration = "1h")
+        val task = Task(activityName = "Test Activity", date = "2024-03-04", startTimeInMillis = "500", endTimeInMillis = "1000", duration = "1h")
 
         // When inserting a task
         repository.insertTask(task)

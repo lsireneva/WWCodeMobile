@@ -55,7 +55,7 @@ import com.example.tasktracker.data.model.Task
     @Preview(showBackground = true)
     @Composable
     private fun TaskCardPreview(){
-        TaskCard(Task(1, "Walking", "Yesterday", 0, 0, "01:35:08"))
+        TaskCard(Task(1, "Walking", "Yesterday", "0", "0", "0"))
     }
 
 

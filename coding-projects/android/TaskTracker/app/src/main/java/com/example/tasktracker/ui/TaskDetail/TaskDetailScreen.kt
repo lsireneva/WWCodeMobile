@@ -1,5 +1,6 @@
 package com.example.tasktracker.ui.TaskDetail
 
+import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,8 +45,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.TimeUtil
+import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
+import java.text.ParseException
 import java.util.Calendar
+import java.util.Locale
 
 
 /**
@@ -57,6 +61,12 @@ import java.util.Calendar
 fun TaskDetailScreen(
     onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel
 ) {
+    var textState by remember { mutableStateOf("") }
+    var taskDate by remember { mutableStateOf("") }
+
+    var startTime by remember { mutableStateOf("0") }
+    var endTime by remember { mutableStateOf("0") }
+
     val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember {
         mutableStateOf(
             false
@@ -101,13 +111,14 @@ fun TaskDetailScreen(
                 onCancel = { setShowCancelConfirmationPopup(false) })
         }
 
-        DetailDateButton()
+        DetailDateButton { selectedDate ->
+            taskDate = selectedDate }
 
-        var textState by remember { mutableStateOf("") }
 
         OutlinedTextField(
             value = textState,
-            onValueChange = { textState = it },
+            onValueChange = { textState = it
+                taskDetailViewModel.updateActivity(it)},
             modifier = Modifier
                 .padding(dimensionResource(R.dimen.medium_padding))
                 .fillMaxWidth()
@@ -116,11 +127,38 @@ fun TaskDetailScreen(
             maxLines = 20,
         )
 
-        TimePickerRow(stringResource(id = R.string.start_time_label))
-        TimePickerRow(stringResource(id = R.string.end_time_label))
+        // For the start time picker
+        TimePickerRow(
+            timeRowLabel = stringResource(id = R.string.start_time_label),
+            initialTime = startTime,
+            onTimeSelected = { newTime ->
+                startTime = newTime
+            }
+        )
+
+        // For the end time picker
+        TimePickerRow(
+            timeRowLabel = stringResource(id = R.string.end_time_label),
+            initialTime = endTime,
+            onTimeSelected = { newTime ->
+                endTime = newTime
+            }
+        )
 
         OutlinedButton(
-            onClick = { onNavigateToList() },
+            onClick = {
+                val duration = calculateDuration(startTime, endTime)
+
+                val newTask = Task(
+                    activityName =  textState,
+                    date = taskDate,
+                    startTimeInMillis = startTime,
+                    endTimeInMillis = endTime,
+                    duration = duration
+
+                )
+                taskDetailViewModel.insertTask(newTask)
+                onNavigateToList() },
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Color.White, contentColor = Green
             ),
@@ -139,10 +177,22 @@ fun TaskDetailScreen(
             Text(text = stringResource(id = R.string.done).uppercase())
         }
     }
-}
 
+}//end of TaskDetailScreen
+fun calculateDuration(startTime: String, endTime: String): String {
+    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return try {
+        val start = format.parse(startTime)?.time ?: 0L
+        val end = format.parse(endTime)?.time ?: 0L
+
+        val durationInMinutes = (end - start) / (60 * 1000)
+        durationInMinutes.toString()
+    } catch (e: ParseException) {
+        "0"
+    }
+}
 @Composable
-fun DetailDateButton() {
+fun DetailDateButton(onDateSelected: (String) -> Unit) {
     var date by remember {
         mutableStateOf(TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis))
     }
@@ -154,7 +204,10 @@ fun DetailDateButton() {
     ) { showDatePicker = true }
 
     if (showDatePicker) {
-        DetailDatePickerDialog(onDateSelected = { date = it },
+        DetailDatePickerDialog(onDateSelected = {newDate ->
+            date = newDate
+            onDateSelected (newDate)
+                                                },
             onDismiss = { showDatePicker = false })
     }
 }
@@ -194,17 +247,19 @@ fun DetailDatePickerDialog(
 
 
 @Composable
-fun TimePickerRow(timeRowLabel: String) {
-    var time by remember {
-        mutableStateOf(TimeUtil.convertTime(Calendar.getInstance().time))
-    }
+fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (String) -> Unit ) {
+    var time by remember { mutableStateOf(initialTime) }
     var showTimePicker by remember { mutableStateOf(false) }
-    LabelButtonRow(
-        label = timeRowLabel.uppercase(), buttonInfo = time
-    ) { showTimePicker = true }
+
+    LabelButtonRow(label = timeRowLabel.uppercase(), buttonInfo = time) {
+        showTimePicker = true
+    }
 
     if (showTimePicker) {
-        DetailTimePickerDialog(onTimeSelected = { time = it },
+        DetailTimePickerDialog(onTimeSelected = { selectedTime ->
+            time = selectedTime
+            onTimeSelected(selectedTime)
+        },
             onDismiss = { showTimePicker = false })
     }
 }
