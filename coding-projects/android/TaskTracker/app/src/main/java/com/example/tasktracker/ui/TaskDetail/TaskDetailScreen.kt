@@ -1,6 +1,5 @@
 package com.example.tasktracker.ui.TaskDetail
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,7 +47,6 @@ import com.example.tasktracker.R
 import com.example.tasktracker.TimeUtil
 import com.example.tasktracker.ui.theme.Green
 import java.util.Calendar
-import kotlin.math.log
 
 
 /**
@@ -66,8 +64,7 @@ fun TaskDetailScreen(
         )
     }
 
-    val showDeleteButton by taskDetailViewModel.showDeleteButton.collectAsState()
-    Log.d("value", " "+showDeleteButton)
+    val uiState by taskDetailViewModel.detailState.collectAsState()
     // Function to handle cancel confirmation
     val onCancelConfirmed = {
         setShowCancelConfirmationPopup(false)
@@ -91,7 +88,7 @@ fun TaskDetailScreen(
                 .padding(dimensionResource(R.dimen.medium_padding)),
             horizontalArrangement = Arrangement.End
         ) {
-            if (showDeleteButton) {
+            if (uiState.showDeleteButton) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         painter = painterResource(id = R.drawable.outline_delete_24),

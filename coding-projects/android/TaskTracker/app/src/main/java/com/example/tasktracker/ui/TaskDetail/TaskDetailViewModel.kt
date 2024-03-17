@@ -1,6 +1,5 @@
 package com.example.tasktracker.ui.TaskDetail
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.tasktracker.data.TaskRepository
@@ -15,28 +14,32 @@ import javax.inject.Inject
 /**
  * Created by Gauri Gadkari on 1/23/24.
  */
+data class DetailState(
+    val showDeleteButton: Boolean
+)
+
+
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
-    private var respository: TaskRepository, savedStateHandle: SavedStateHandle
+    private val repository: TaskRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val taskId: String? = savedStateHandle[NavScreens.TaskArgs.TASK_ID_ARG]
-
-    private var _showDeleteButton = MutableStateFlow(false)
-    var showDeleteButton: StateFlow<Boolean> = _showDeleteButton
+    private val _deleteState = MutableStateFlow(DetailState(false))
+    val detailState: StateFlow<DetailState> = _deleteState
 
     init {
-        _showDeleteButton.update { taskId != "null" }
+        _deleteState.update { _deleteState.value.copy(showDeleteButton = (taskId != null)) }
     }
 
     suspend fun insertTask(task: Task) {
-        respository.insertTask(task)
+        repository.insertTask(task)
     }
 
     suspend fun deleteTask(task: Task) {
-        respository.deleteTask(task)
+        repository.deleteTask(task)
     }
 
     suspend fun updateTask(task: Task) {
-        respository.updateTask(task)
+        repository.updateTask(task)
     }
 }
