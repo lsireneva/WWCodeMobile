@@ -21,19 +21,29 @@ fun MainScreen() {
             val viewModel = hiltViewModel<TaskListViewModel>()
             TaskListScreen(
                 onNavigateToSettings = { navController.navigate(NavScreens.TaskSettings.route) },
-                onNavigateToDetail = { navController.navigate("${NavScreens.TaskDetail.route}/$it") },
+                onNavigateToDetail = { taskId ->
+                    navController.navigate("${NavScreens.TaskDetail.route}/${getDetailArg(taskId = taskId)}")
+                },
                 taskListViewModel = viewModel
             )
         }
         composable(NavScreens.TaskSettings.route) {
             TaskSettingsScreen()
         }
-        composable("${NavScreens.TaskDetail.route}/{$TASK_ID_ARG}") {
+        composable("${NavScreens.TaskDetail.route}/?$TASK_ID_ARG={$TASK_ID_ARG}") {
             val viewModel = hiltViewModel<TaskDetailViewModel>()
             TaskDetailScreen(
                 onNavigateToList = { navController.navigate(NavScreens.TaskList.route) },
                 taskDetailViewModel = viewModel
             )
         }
+    }
+}
+
+fun getDetailArg(taskId: Int?): String {
+    return if (taskId == null) {
+        ""
+    } else {
+        "?$TASK_ID_ARG=$taskId"
     }
 }

@@ -60,7 +60,7 @@ fun TaskListScreen(
 
 @Composable
 fun TaskList(
-    taskList: List<Task>, modifier: Modifier = Modifier, onNavigateToDetail: (id: Int) -> Unit
+    taskList: List<Task>, modifier: Modifier = Modifier, onNavigateToDetail: (id: Int?) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.padding(dimensionResource(R.dimen.medium_padding)),
