@@ -1,5 +1,6 @@
 package com.example.tasktracker.ui.TaskDetail
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.tasktracker.data.TaskRepository
@@ -19,11 +20,12 @@ class TaskDetailViewModel @Inject constructor(
     private var respository: TaskRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val taskId: String? = savedStateHandle[NavScreens.TaskArgs.TASK_ID_ARG]
+
     private var _showDeleteButton = MutableStateFlow(false)
     var showDeleteButton: StateFlow<Boolean> = _showDeleteButton
 
     init {
-        _showDeleteButton.update { taskId != null }
+        _showDeleteButton.update { taskId != "null" }
     }
 
     suspend fun insertTask(task: Task) {

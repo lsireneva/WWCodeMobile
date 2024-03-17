@@ -21,7 +21,7 @@ fun MainScreen() {
             val viewModel = hiltViewModel<TaskListViewModel>()
             TaskListScreen(
                 onNavigateToSettings = { navController.navigate(NavScreens.TaskSettings.route) },
-                onNavigateToDetail = { navController.navigate("${NavScreens.TaskDetail.route}/${it}") },
+                onNavigateToDetail = { navController.navigate("${NavScreens.TaskDetail.route}/$it") },
                 taskListViewModel = viewModel
             )
         }

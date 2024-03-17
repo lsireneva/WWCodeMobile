@@ -46,7 +46,7 @@ fun TaskListScreen(
     val allTasks by taskListViewModel.getAllTasks().collectAsState(emptyList())
 
     Scaffold(topBar = {
-        ListScreenTopAppBar({ onNavigateToSettings() }, { onNavigateToDetail(null) })
+        ListScreenTopAppBar({ onNavigateToSettings() }, onNavigateToDetail)
     }) {
         TaskList(
             taskList = allTasks,
