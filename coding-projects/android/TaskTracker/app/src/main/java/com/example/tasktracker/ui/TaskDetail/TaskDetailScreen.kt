@@ -29,6 +29,7 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.TimeUtil
+import com.example.tasktracker.TimeUtil.Companion.calculateDuration
 import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
 import java.text.ParseException
@@ -61,11 +63,7 @@ import java.util.Locale
 fun TaskDetailScreen(
     onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel
 ) {
-    var textState by remember { mutableStateOf("") }
-    var taskDate by remember { mutableStateOf("") }
 
-    var startTime by remember { mutableStateOf("0") }
-    var endTime by remember { mutableStateOf("0") }
 
     val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember {
         mutableStateOf(
@@ -73,6 +71,7 @@ fun TaskDetailScreen(
         )
     }
 
+    val uiState by taskDetailViewModel.detailState.collectAsState()
     // Function to handle cancel confirmation
     val onCancelConfirmed = {
         setShowCancelConfirmationPopup(false)
@@ -96,11 +95,13 @@ fun TaskDetailScreen(
                 .padding(dimensionResource(R.dimen.medium_padding)),
             horizontalArrangement = Arrangement.End
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.outline_delete_24),
-                    contentDescription = stringResource(id = R.string.delete),
-                )
+            if (uiState.showDeleteButton) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_delete_24),
+                        contentDescription = stringResource(id = R.string.delete),
+                    )
+                }
             }
             CancelButton(onClick = { setShowCancelConfirmationPopup(true) })
         }
@@ -112,13 +113,12 @@ fun TaskDetailScreen(
         }
 
         DetailDateButton { selectedDate ->
-            taskDate = selectedDate }
+            taskDetailViewModel.updateDate(selectedDate) }
 
 
         OutlinedTextField(
-            value = textState,
-            onValueChange = { textState = it
-                taskDetailViewModel.updateActivity(it)},
+            value = uiState.activityName,
+            onValueChange = { taskDetailViewModel.updateActivity(it) },
             modifier = Modifier
                 .padding(dimensionResource(R.dimen.medium_padding))
                 .fillMaxWidth()
@@ -130,32 +130,28 @@ fun TaskDetailScreen(
         // For the start time picker
         TimePickerRow(
             timeRowLabel = stringResource(id = R.string.start_time_label),
-            initialTime = startTime,
-            onTimeSelected = { newTime ->
-                startTime = newTime
-            }
+            initialTime = uiState.startTime,
+            onTimeSelected = taskDetailViewModel::updateStartTime
         )
 
         // For the end time picker
         TimePickerRow(
             timeRowLabel = stringResource(id = R.string.end_time_label),
-            initialTime = endTime,
-            onTimeSelected = { newTime ->
-                endTime = newTime
-            }
+            initialTime = uiState.endTime,
+            onTimeSelected = taskDetailViewModel::updateEndTime
         )
 
         OutlinedButton(
             onClick = {
-                val duration = calculateDuration(startTime, endTime)
+                // Use TimeUtil.calculateDuration
+                val duration = calculateDuration(uiState.startTime, uiState.endTime)
 
                 val newTask = Task(
-                    activityName =  textState,
-                    date = taskDate,
-                    startTimeInMillis = startTime,
-                    endTimeInMillis = endTime,
+                    activityName = uiState.activityName,
+                    date = uiState.date,
+                    startTimeInMillis = uiState.startTime,
+                    endTimeInMillis = uiState.endTime,
                     duration = duration
-
                 )
                 taskDetailViewModel.insertTask(newTask)
                 onNavigateToList() },
@@ -179,18 +175,7 @@ fun TaskDetailScreen(
     }
 
 }//end of TaskDetailScreen
-fun calculateDuration(startTime: String, endTime: String): String {
-    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-    return try {
-        val start = format.parse(startTime)?.time ?: 0L
-        val end = format.parse(endTime)?.time ?: 0L
 
-        val durationInMinutes = (end - start) / (60 * 1000)
-        durationInMinutes.toString()
-    } catch (e: ParseException) {
-        "0"
-    }
-}
 @Composable
 fun DetailDateButton(onDateSelected: (String) -> Unit) {
     var date by remember {

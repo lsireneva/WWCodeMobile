@@ -39,24 +39,28 @@ import com.example.tasktracker.data.model.Task
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit, taskListViewModel: TaskListViewModel
+    onNavigateToSettings: () -> Unit,
+    onNavigateToDetail: (id: Int?) -> Unit,
+    taskListViewModel: TaskListViewModel
 ) {
     val allTasks by taskListViewModel.getAllTasks().collectAsState(emptyList())
 
     Scaffold(topBar = {
-        ListScreenTopAppBar({ onNavigateToSettings() }, { onNavigateToDetail() })
+        ListScreenTopAppBar({ onNavigateToSettings() }, onNavigateToDetail)
     }) {
         TaskList(
-            taskList = allTasks, modifier = Modifier
+            taskList = allTasks,
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(it),
+            onNavigateToDetail = onNavigateToDetail
         )
     }
 }
 
 @Composable
 fun TaskList(
-    taskList: List<Task>, modifier: Modifier = Modifier
+    taskList: List<Task>, modifier: Modifier = Modifier, onNavigateToDetail: (id: Int?) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.padding(dimensionResource(R.dimen.medium_padding)),
@@ -77,15 +81,13 @@ fun TaskList(
             }
 
             items(tasks) { task ->
-                TaskCard(
-                    task = task, modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                            dimensionResource(R.dimen.border_thickness),
-                            Color.Black,
-                            RoundedCornerShape(dimensionResource(R.dimen.small_round_corner))
-                        )
-                )
+                TaskCard(task = task, modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        dimensionResource(R.dimen.border_thickness),
+                        Color.Black,
+                        RoundedCornerShape(dimensionResource(R.dimen.small_round_corner))
+                    ), onClick = { onNavigateToDetail(task.id) })
             }
         }
     }
@@ -110,7 +112,7 @@ fun Header(text: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreenTopAppBar(
-    onNavigateToSettings: () -> Unit, onNavigateToDetail: () -> Unit
+    onNavigateToSettings: () -> Unit, onNavigateToDetail: (id: Int?) -> Unit
 ) {
     TopAppBar(title = {
         Column(
@@ -126,7 +128,7 @@ fun ListScreenTopAppBar(
             )
         }
     }, actions = {
-        IconButton(onClick = { onNavigateToDetail() }) {
+        IconButton(onClick = { onNavigateToDetail(null) }) {
             Icon(
                 Icons.Filled.AddCircle, contentDescription = stringResource(R.string.add_button)
             )
@@ -152,14 +154,12 @@ private fun TopAppBarPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun TaskListPreview() {
-    TaskList(
-        listOf(
-            Task(1, "Walking", "Yesterday", "0", "0","01:35:08" ),
-            Task(2, "finishing certifications", "Yesterday", "0", "0", "03:40:04"),
-            Task(3, "setting up new dryer unit", "December 19, Tuesday", "0", "0", "01:20:21"),
-            Task(4, "coding crunch time", "December 19, Tuesday", "0", "0", "09:30:10")
-        )
-    )
+    TaskList(listOf(
+        Task(1, "Walking", "Yesterday", "0", "0", "01:35:08"),
+        Task(2, "finishing certifications", "Yesterday", "0", "0", "03:40:04"),
+        Task(3, "setting up new dryer unit", "December 19, Tuesday", "0", "0", "01:20:21"),
+        Task(4, "coding crunch time", "December 19, Tuesday", "0", "0", "09:30:10")
+    ), onNavigateToDetail = {})
 }
 
 @Preview(showBackground = true)
