@@ -11,7 +11,6 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                // TODO: Add version number footer #122
                 Section {
                     AboutUsView()
                     PrivacyView()
@@ -22,26 +21,24 @@ struct SettingsView: View {
                     Label("Info & Feedback", systemImage: "info.bubble.fill")
                         .font(.subheadline)
                         .fontWeight(.bold)
+                } footer: {
+                    VersionView()
                 }
 
                 Section {
-                    
+                    DaysView()
+                    ShowBadgeView()
+                    ReminderNotificationView()
+                    ReminderTimeView()
                 } header: {
                     Label("Notifications", systemImage:
                         "bell.fill")
                         .font(.subheadline)
                         .fontWeight(.bold)
                 }
-                
-                Section {
-                    DaysView()
-                    ShowBadgeView()
-                    ReminderNotificationView()
-                    ReminderTimeView()
-                }
 
                 Section {
-                    VersionView()
+                    VersionViewRow()
                     // TODO: Add vote on future requests row #115
                 } header: {
                     Label("What's New", systemImage: "wand.and.stars")
@@ -118,6 +115,16 @@ private struct DaysView: View {
     }
 }
 
+private struct VersionViewRow: View {
+    var body: some View {
+        HStack{
+            VersionView()
+            Spacer()
+            Image(systemName: "chevron.right")
+        }
+    }
+}
+
 private struct VersionView: View {
     let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     var body: some View {
@@ -127,12 +134,9 @@ private struct VersionView: View {
                 .font(Font.body.weight(.regular))
                 .imageScale(.large)
             Text("Version " + appVersion)
-            Spacer()
-            Image(systemName: "chevron.right")
         }
     }
 }
-
 private struct RateAppView: View {
     
     var body: some View {
