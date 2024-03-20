@@ -9,7 +9,7 @@ import com.example.tasktracker.data.model.Task
  * The Room database for this app
  */
 
-@Database(entities = [Task::class], version = 1, exportSchema = false)
+@Database(entities = [Task::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDAO(): TaskDAO
 }

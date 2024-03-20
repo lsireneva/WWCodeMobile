@@ -27,32 +27,32 @@ class TaskListViewModel @Inject constructor(private var respository: TaskReposit
                 1,
                 "Walking",
                 "Yesterday",
-                0,
-                0,
+                "0",
+                "0",
                 "01:35:08"
             ),
             Task(
                 2,
                 "finishing certifications",
                 "Yesterday",
-                0,
-                0,
+                "0",
+                "0",
                 "03:40:04"
             ),
             Task(
                 3,
                 "setting up new dryer unit",
                 "December 19, Tuesday",
-                0,
-                0,
+                "0",
+                "0",
                 "01:20:21"
             ),
             Task(
                 4,
                 "coding crunch time",
                 "December 19, Tuesday",
-                0,
-                0,
+                "0",
+                "0",
                 "09:30:10"
             )
         )
