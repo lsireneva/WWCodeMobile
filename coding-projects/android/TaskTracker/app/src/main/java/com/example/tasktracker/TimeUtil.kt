@@ -34,15 +34,21 @@ class TimeUtil {
         }
 
         fun calculateDuration(startTime: String, endTime: String): String {
-            val format = android.icu.text.SimpleDateFormat("HH:mm", Locale.getDefault())
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
             return try {
                 val start = format.parse(startTime)?.time ?: 0L
                 val end = format.parse(endTime)?.time ?: 0L
 
-                val durationInMinutes = (end - start) / (60 * 1000)
-                durationInMinutes.toString()
+                val durationInMillis = end - start
+
+                val hours = durationInMillis / (3600 * 1000)
+                val minutes = (durationInMillis % (3600 * 1000)) / (60 * 1000)
+                val seconds = (durationInMillis % (60 * 1000)) / 1000
+
+                // Format and return as a string
+                String.format("%02d:%02d:%02d", hours, minutes, seconds)
             } catch (e: ParseException) {
-                "0"
+                "00:00:00"
             }
         }
     }

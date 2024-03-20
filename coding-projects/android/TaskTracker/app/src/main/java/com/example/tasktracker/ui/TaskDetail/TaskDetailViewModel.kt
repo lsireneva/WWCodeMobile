@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tasktracker.TimeUtil
 import com.example.tasktracker.data.TaskRepository
 import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.navigation.NavScreens
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 import javax.inject.Inject
 
 /**
@@ -22,9 +24,9 @@ import javax.inject.Inject
 data class DetailState(
     val showDeleteButton: Boolean,
     val activityName: String = "",
-    val date: String = "",
-    val startTime: String = "0",
-    val endTime: String = "0"
+    val date: String = TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis),
+    val startTime: String =  TimeUtil.convertTime(Calendar.getInstance().time),
+    val endTime: String = TimeUtil.convertTime(Calendar.getInstance().time)
 
 )
 
