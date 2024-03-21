@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "table_task")
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    val id: Int = 0,
     val activityName: String,
     val date: String,
     val startTimeInMillis: String,
