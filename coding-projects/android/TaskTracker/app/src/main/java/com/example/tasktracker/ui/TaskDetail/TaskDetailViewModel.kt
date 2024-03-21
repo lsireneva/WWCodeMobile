@@ -30,22 +30,24 @@ data class DetailState(
     val endTime: String = TimeUtil.convertTime(Calendar.getInstance().time)
 )
 
-
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val taskId: String = savedStateHandle[NavScreens.TaskArgs.TASK_ID_ARG] ?: "0"
+    private val taskId: Int =
+        Integer.parseInt(savedStateHandle[NavScreens.TaskArgs.TASK_ID_ARG] ?: "0")
     private val _detailState = MutableStateFlow(DetailState(false))
     val detailState: StateFlow<DetailState> = _detailState
 
     init {
-        _detailState.update {
-            _detailState.value.copy(
-                isEditMode = (taskId != null), taskId = Integer.parseInt(taskId)
-            )
+        if (taskId != 0) {
+            loadTask(taskId)
+            _detailState.update {
+                _detailState.value.copy(
+                    isEditMode = true, taskId = taskId
+                )
+            }
         }
-
     }
 
     fun updateActivity(activityName: String) {
@@ -85,9 +87,32 @@ class TaskDetailViewModel @Inject constructor(
     fun updateTask(task: Task) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-//                    TODO - when testing uncomment this line
-//                  task.id = 1
+                // TODO - when testing- uncomment this line
+                //  task.id = 1
                 repository.updateTask(task)
+            }
+        }
+    }
+
+    /**
+     * loads current task from database
+     */
+    private fun loadTask(taskId: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.getTask(taskId).let {
+                    it?.let { task ->
+                        _detailState.update { detailState ->
+                            detailState.copy(
+                                activityName = task.activityName,
+                                date = task.date,
+                                startTime = task.startTimeInMillis,
+                                endTime = task.endTimeInMillis
+                            )
+                        }
+                    }
+
+                }
             }
         }
     }
