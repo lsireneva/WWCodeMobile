@@ -42,11 +42,6 @@ class TaskDetailViewModel @Inject constructor(
     init {
         if (taskId != 0) {
             loadTask(taskId)
-            _detailState.update {
-                _detailState.value.copy(
-                    isEditMode = true, taskId = taskId
-                )
-            }
         }
     }
 
@@ -104,6 +99,8 @@ class TaskDetailViewModel @Inject constructor(
                     it?.let { task ->
                         _detailState.update { detailState ->
                             detailState.copy(
+                                isEditMode = true,
+                                taskId = taskId,
                                 activityName = task.activityName,
                                 date = task.date,
                                 startTime = task.startTimeInMillis,
