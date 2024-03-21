@@ -1,6 +1,5 @@
 package com.example.tasktracker.ui.TaskDetail
 
-import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,9 +48,7 @@ import com.example.tasktracker.TimeUtil
 import com.example.tasktracker.TimeUtil.Companion.calculateDuration
 import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
-import java.text.ParseException
 import java.util.Calendar
-import java.util.Locale
 
 
 /**
@@ -113,7 +110,8 @@ fun TaskDetailScreen(
         }
 
         DetailDateButton { selectedDate ->
-            taskDetailViewModel.updateDate(selectedDate) }
+            taskDetailViewModel.updateDate(selectedDate)
+        }
 
 
         OutlinedTextField(
@@ -153,8 +151,13 @@ fun TaskDetailScreen(
                     endTimeInMillis = uiState.endTime,
                     duration = duration
                 )
-                taskDetailViewModel.insertTask(newTask)
-                onNavigateToList() },
+                if (uiState.showDeleteButton) {
+                    taskDetailViewModel.updateTask(newTask)
+                } else {
+                    taskDetailViewModel.insertTask(newTask)
+                }
+                onNavigateToList()
+            },
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Color.White, contentColor = Green
             ),
@@ -189,11 +192,10 @@ fun DetailDateButton(onDateSelected: (String) -> Unit) {
     ) { showDatePicker = true }
 
     if (showDatePicker) {
-        DetailDatePickerDialog(onDateSelected = {newDate ->
+        DetailDatePickerDialog(onDateSelected = { newDate ->
             date = newDate
-            onDateSelected (newDate)
-                                                },
-            onDismiss = { showDatePicker = false })
+            onDateSelected(newDate)
+        }, onDismiss = { showDatePicker = false })
     }
 }
 
@@ -232,7 +234,7 @@ fun DetailDatePickerDialog(
 
 
 @Composable
-fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (String) -> Unit ) {
+fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (String) -> Unit) {
     var time by remember { mutableStateOf(initialTime) }
     var showTimePicker by remember { mutableStateOf(false) }
 
@@ -244,8 +246,7 @@ fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (St
         DetailTimePickerDialog(onTimeSelected = { selectedTime ->
             time = selectedTime
             onTimeSelected(selectedTime)
-        },
-            onDismiss = { showTimePicker = false })
+        }, onDismiss = { showTimePicker = false })
     }
 }
 

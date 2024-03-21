@@ -9,14 +9,14 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "table_task")
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    var id: Int = 0,
     val activityName: String,
     val date: String,
     val startTimeInMillis: String,
     val endTimeInMillis: String,
     val duration: String
     // these property names and types are subject to change when app persistence is implemented
-){
+) {
 
     override fun toString(): String {
         return "Task(id=$id, activityName='$activityName', date='$date', startTimeInMillis='$startTimeInMillis', endTimeInMillis='$endTimeInMillis', duration='$duration')"
