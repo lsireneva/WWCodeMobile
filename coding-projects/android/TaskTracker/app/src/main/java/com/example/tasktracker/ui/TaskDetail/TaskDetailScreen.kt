@@ -92,7 +92,7 @@ fun TaskDetailScreen(
                 .padding(dimensionResource(R.dimen.medium_padding)),
             horizontalArrangement = Arrangement.End
         ) {
-            if (uiState.showDeleteButton) {
+            if (uiState.isEditMode) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         painter = painterResource(id = R.drawable.outline_delete_24),
@@ -145,13 +145,14 @@ fun TaskDetailScreen(
                 val duration = calculateDuration(uiState.startTime, uiState.endTime)
 
                 val newTask = Task(
+                    id = uiState.taskId,
                     activityName = uiState.activityName,
                     date = uiState.date,
                     startTimeInMillis = uiState.startTime,
                     endTimeInMillis = uiState.endTime,
                     duration = duration
                 )
-                if (uiState.showDeleteButton) {
+                if (uiState.isEditMode) {
                     taskDetailViewModel.updateTask(newTask)
                 } else {
                     taskDetailViewModel.insertTask(newTask)
