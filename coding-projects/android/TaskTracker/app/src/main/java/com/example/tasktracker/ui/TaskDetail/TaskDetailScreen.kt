@@ -1,6 +1,6 @@
 package com.example.tasktracker.ui.TaskDetail
 
-import android.icu.text.SimpleDateFormat
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,9 +49,7 @@ import com.example.tasktracker.TimeUtil
 import com.example.tasktracker.TimeUtil.Companion.calculateDuration
 import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
-import java.text.ParseException
 import java.util.Calendar
-import java.util.Locale
 
 
 /**
@@ -63,8 +61,6 @@ import java.util.Locale
 fun TaskDetailScreen(
     onNavigateToList: () -> Unit, taskDetailViewModel: TaskDetailViewModel
 ) {
-
-
     val (showCancelConfirmationPopup, setShowCancelConfirmationPopup) = remember {
         mutableStateOf(
             false
@@ -77,6 +73,7 @@ fun TaskDetailScreen(
         setShowCancelConfirmationPopup(false)
         onNavigateToList()
     }
+
     OutlinedCard(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -95,7 +92,8 @@ fun TaskDetailScreen(
                 .padding(dimensionResource(R.dimen.medium_padding)),
             horizontalArrangement = Arrangement.End
         ) {
-            if (uiState.showDeleteButton) {
+            Log.d("iseditmode", " ::" + uiState.isEditMode)
+            if (uiState.isEditMode) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         painter = painterResource(id = R.drawable.outline_delete_24),
@@ -112,9 +110,11 @@ fun TaskDetailScreen(
                 onCancel = { setShowCancelConfirmationPopup(false) })
         }
 
-        DetailDateButton { selectedDate ->
-            taskDetailViewModel.updateDate(selectedDate) }
-
+        DetailDateButton(
+            initialDate = uiState.date,
+        ) { selectedDate ->
+            taskDetailViewModel.updateDate(selectedDate)
+        }
 
         OutlinedTextField(
             value = uiState.activityName,
@@ -145,16 +145,21 @@ fun TaskDetailScreen(
             onClick = {
                 // Use TimeUtil.calculateDuration
                 val duration = calculateDuration(uiState.startTime, uiState.endTime)
-
                 val newTask = Task(
+                    id = uiState.taskId,
                     activityName = uiState.activityName,
                     date = uiState.date,
                     startTimeInMillis = uiState.startTime,
                     endTimeInMillis = uiState.endTime,
                     duration = duration
                 )
-                taskDetailViewModel.insertTask(newTask)
-                onNavigateToList() },
+                if (uiState.isEditMode) {
+                    taskDetailViewModel.updateTask(newTask)
+                } else {
+                    taskDetailViewModel.insertTask(newTask)
+                }
+                onNavigateToList()
+            },
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Color.White, contentColor = Green
             ),
@@ -177,23 +182,21 @@ fun TaskDetailScreen(
 }//end of TaskDetailScreen
 
 @Composable
-fun DetailDateButton(onDateSelected: (String) -> Unit) {
+fun DetailDateButton(initialDate: String, onDateSelected: (String) -> Unit) {
     var date by remember {
         mutableStateOf(TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis))
     }
-
     var showDatePicker by remember { mutableStateOf(false) }
 
     LabelButtonRow(
-        label = stringResource(id = R.string.date_label).uppercase(), buttonInfo = date
+        label = stringResource(id = R.string.date_label).uppercase(), buttonInfo = initialDate
     ) { showDatePicker = true }
 
     if (showDatePicker) {
-        DetailDatePickerDialog(onDateSelected = {newDate ->
+        DetailDatePickerDialog(initialDate, onDateSelected = { newDate ->
             date = newDate
-            onDateSelected (newDate)
-                                                },
-            onDismiss = { showDatePicker = false })
+            onDateSelected(newDate)
+        }, onDismiss = { showDatePicker = false })
     }
 }
 
@@ -201,22 +204,18 @@ fun DetailDateButton(onDateSelected: (String) -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailDatePickerDialog(
-    onDateSelected: (String) -> Unit, onDismiss: () -> Unit
+    initialDate: String, onDateSelected: (String) -> Unit, onDismiss: () -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
-
+    val datePickerState = rememberDatePickerState(TimeUtil.convertDateToMillis(initialDate))
     val selectedDate = datePickerState.selectedDateMillis?.let {
         TimeUtil.convertMillisToDate(it)
     } ?: ""
-
 
     DatePickerDialog(onDismissRequest = { onDismiss() }, confirmButton = {
         Button(onClick = {
             onDateSelected(selectedDate)
             onDismiss()
-        }
-
-        ) {
+        }) {
             Text(text = stringResource(id = R.string.ok).uppercase())
         }
     }, dismissButton = {
@@ -230,38 +229,30 @@ fun DetailDatePickerDialog(
     }
 }
 
-
 @Composable
-fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (String) -> Unit ) {
-    var time by remember { mutableStateOf(initialTime) }
+fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (String) -> Unit) {
     var showTimePicker by remember { mutableStateOf(false) }
-
-    LabelButtonRow(label = timeRowLabel.uppercase(), buttonInfo = time) {
+    LabelButtonRow(label = timeRowLabel.uppercase(), buttonInfo = initialTime) {
         showTimePicker = true
     }
 
     if (showTimePicker) {
-        DetailTimePickerDialog(onTimeSelected = { selectedTime ->
-            time = selectedTime
+        DetailTimePickerDialog(initialTime, onTimeSelected = { selectedTime ->
             onTimeSelected(selectedTime)
-        },
-            onDismiss = { showTimePicker = false })
+        }, onDismiss = { showTimePicker = false })
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailTimePickerDialog(onTimeSelected: (String) -> Unit, onDismiss: () -> Unit) {
-
-    val currentTime = TimeUtil.convertTime(Calendar.getInstance().time)
-    val (hour, minute) = currentTime.split(":")
-
-
+fun DetailTimePickerDialog(
+    initialTime: String, onTimeSelected: (String) -> Unit, onDismiss: () -> Unit
+) {
+    val (hour, minute) = initialTime.split(":")
     val timePickerState = rememberTimePickerState(
         initialHour = hour.toInt(), initialMinute = minute.toInt(), is24Hour = false
     )
     val selectedTime = String.format("%02d:%02d", timePickerState.hour, timePickerState.minute)
-
 
     TimePickerDialog(onDismissRequest = { onDismiss() }, onConfirm = {
         onTimeSelected(selectedTime)

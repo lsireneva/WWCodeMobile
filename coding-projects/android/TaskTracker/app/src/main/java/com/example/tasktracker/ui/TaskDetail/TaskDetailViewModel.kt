@@ -22,25 +22,27 @@ import javax.inject.Inject
  * Created by Gauri Gadkari on 1/23/24.
  */
 data class DetailState(
-    val showDeleteButton: Boolean,
+    val isEditMode: Boolean,
+    val taskId: Int = 0,
     val activityName: String = "",
     val date: String = TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis),
-    val startTime: String =  TimeUtil.convertTime(Calendar.getInstance().time),
+    val startTime: String = TimeUtil.convertTime(Calendar.getInstance().time),
     val endTime: String = TimeUtil.convertTime(Calendar.getInstance().time)
-
 )
-
 
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val taskId: String? = savedStateHandle[NavScreens.TaskArgs.TASK_ID_ARG]
+    private val taskId: Int =
+        Integer.parseInt(savedStateHandle[NavScreens.TaskArgs.TASK_ID_ARG] ?: "0")
     private val _detailState = MutableStateFlow(DetailState(false))
     val detailState: StateFlow<DetailState> = _detailState
 
     init {
-        _detailState.update { _detailState.value.copy(showDeleteButton = (taskId != null)) }
+        if (taskId != 0) {
+            loadTask(taskId)
+        }
     }
 
     fun updateActivity(activityName: String) {
@@ -80,10 +82,35 @@ class TaskDetailViewModel @Inject constructor(
     fun updateTask(task: Task) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                // TODO - when testing- uncomment this line
+                //  task.id = 1
                 repository.updateTask(task)
             }
         }
     }
 
+    /**
+     * loads current task from database
+     */
+    private fun loadTask(taskId: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.getTask(taskId).let {
+                    it?.let { task ->
+                        _detailState.update { detailState ->
+                            detailState.copy(
+                                isEditMode = true,
+                                taskId = taskId,
+                                activityName = task.activityName,
+                                date = task.date,
+                                startTime = task.startTimeInMillis,
+                                endTime = task.endTimeInMillis
+                            )
+                        }
+                    }
 
+                }
+            }
+        }
+    }
 }

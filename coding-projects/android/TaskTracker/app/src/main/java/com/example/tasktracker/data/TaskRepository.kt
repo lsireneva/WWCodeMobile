@@ -21,4 +21,7 @@ class TaskRepository @Inject constructor(private val taskDAO: TaskDAO) : ITaskRe
     override suspend fun updateTask(task: Task) {
         taskDAO.updateTask(task)
     }
+    override suspend fun getTask(taskId: Int): Task?{
+        return taskDAO.getTaskById(taskId)
+    }
 }

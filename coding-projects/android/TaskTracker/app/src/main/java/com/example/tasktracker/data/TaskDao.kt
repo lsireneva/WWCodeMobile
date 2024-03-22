@@ -28,4 +28,6 @@ interface TaskDAO {
     @Query("SELECT * FROM table_task ORDER BY id")
     fun getAllTasks(): Flow<List<Task>>
 
+    @Query("SELECT * FROM table_task WHERE id = :id")
+    fun getTaskById(id: Int): Task?
 }

@@ -1,6 +1,7 @@
 package com.example.tasktracker
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -33,6 +34,10 @@ class TimeUtil {
             return formatter.format(time).toString()
         }
 
+        fun convertDateToMillis(date: String): Long {
+            val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+            return formatter.parse(date).time
+        }
         fun calculateDuration(startTime: String, endTime: String): String {
             val format = SimpleDateFormat("HH:mm", Locale.getDefault())
             return try {
