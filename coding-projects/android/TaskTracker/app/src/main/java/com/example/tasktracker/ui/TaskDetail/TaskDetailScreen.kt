@@ -193,7 +193,7 @@ fun DetailDateButton(initialDate: String, onDateSelected: (String) -> Unit) {
     ) { showDatePicker = true }
 
     if (showDatePicker) {
-        DetailDatePickerDialog(onDateSelected = { newDate ->
+        DetailDatePickerDialog(initialDate, onDateSelected = { newDate ->
             date = newDate
             onDateSelected(newDate)
         }, onDismiss = { showDatePicker = false })
@@ -204,9 +204,9 @@ fun DetailDateButton(initialDate: String, onDateSelected: (String) -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailDatePickerDialog(
-    onDateSelected: (String) -> Unit, onDismiss: () -> Unit
+    initialDate: String, onDateSelected: (String) -> Unit, onDismiss: () -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(TimeUtil.convertDateToMillis(initialDate))
     val selectedDate = datePickerState.selectedDateMillis?.let {
         TimeUtil.convertMillisToDate(it)
     } ?: ""
@@ -237,7 +237,7 @@ fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (St
     }
 
     if (showTimePicker) {
-        DetailTimePickerDialog(onTimeSelected = { selectedTime ->
+        DetailTimePickerDialog(initialTime, onTimeSelected = { selectedTime ->
             onTimeSelected(selectedTime)
         }, onDismiss = { showTimePicker = false })
     }
@@ -245,9 +245,10 @@ fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (St
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailTimePickerDialog(onTimeSelected: (String) -> Unit, onDismiss: () -> Unit) {
-    val currentTime = TimeUtil.convertTime(Calendar.getInstance().time)
-    val (hour, minute) = currentTime.split(":")
+fun DetailTimePickerDialog(
+    initialTime: String, onTimeSelected: (String) -> Unit, onDismiss: () -> Unit
+) {
+    val (hour, minute) = initialTime.split(":")
     val timePickerState = rememberTimePickerState(
         initialHour = hour.toInt(), initialMinute = minute.toInt(), is24Hour = false
     )
