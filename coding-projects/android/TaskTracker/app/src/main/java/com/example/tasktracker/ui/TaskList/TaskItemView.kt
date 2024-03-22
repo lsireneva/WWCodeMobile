@@ -56,7 +56,7 @@ fun TaskCard(task: Task, modifier: Modifier = Modifier, onClick: (Task) -> Unit)
 @Preview(showBackground = true)
 @Composable
 private fun TaskCardPreview() {
-    TaskCard(Task(1, "Walking", "Yesterday", 0, 0, "01:35:08"), onClick = {})
+    TaskCard(Task(1, "Walking", "Yesterday", "0", "0", "01:35:08"), onClick = {})
 }
 
 

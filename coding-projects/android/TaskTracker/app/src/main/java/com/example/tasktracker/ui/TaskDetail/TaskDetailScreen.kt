@@ -1,5 +1,6 @@
 package com.example.tasktracker.ui.TaskDetail
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,6 +46,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.R
 import com.example.tasktracker.TimeUtil
+import com.example.tasktracker.TimeUtil.Companion.calculateDuration
+import com.example.tasktracker.data.model.Task
 import com.example.tasktracker.ui.theme.Green
 import java.util.Calendar
 
@@ -76,6 +79,7 @@ fun TaskDetailScreen(
         setShowCancelConfirmationPopup(false)
         onNavigateToList()
     }
+
     val onDeleteConfirmed = {
         setShowDeleteConfirmationPopup(false)
         onNavigateToList()
@@ -98,8 +102,11 @@ fun TaskDetailScreen(
                 .padding(dimensionResource(R.dimen.medium_padding)),
             horizontalArrangement = Arrangement.End
         ) {
-            if (uiState.showDeleteButton) {
+
+            Log.d("iseditmode", " ::" + uiState.isEditMode)
+            if (uiState.isEditMode) {
                 DeleteButton (onClick = {setShowDeleteConfirmationPopup(true)})
+
             }
             CancelButton(onClick = { setShowCancelConfirmationPopup(true) })
         }
@@ -109,20 +116,22 @@ fun TaskDetailScreen(
                 onConfirm = onCancelConfirmed,
                 onCancel = { setShowCancelConfirmationPopup(false) })
         }
-
-        DetailDateButton()
-        
         if (showDeleteConfirmationPopup){
             ConfirmationDialog(message = stringResource(id = R.string.delete_popup_message),
                 onConfirm = onDeleteConfirmed,
                 onCancel = {setShowDeleteConfirmationPopup(false)})
         }
 
+        DetailDateButton(
+            initialDate = uiState.date,
+        ) { selectedDate ->
+            taskDetailViewModel.updateDate(selectedDate)
+        }
         var textState by remember { mutableStateOf("") }
 
         OutlinedTextField(
-            value = textState,
-            onValueChange = { textState = it },
+            value = uiState.activityName,
+            onValueChange = { taskDetailViewModel.updateActivity(it) },
             modifier = Modifier
                 .padding(dimensionResource(R.dimen.medium_padding))
                 .fillMaxWidth()
@@ -131,11 +140,39 @@ fun TaskDetailScreen(
             maxLines = 20,
         )
 
-        TimePickerRow(stringResource(id = R.string.start_time_label))
-        TimePickerRow(stringResource(id = R.string.end_time_label))
+        // For the start time picker
+        TimePickerRow(
+            timeRowLabel = stringResource(id = R.string.start_time_label),
+            initialTime = uiState.startTime,
+            onTimeSelected = taskDetailViewModel::updateStartTime
+        )
+
+        // For the end time picker
+        TimePickerRow(
+            timeRowLabel = stringResource(id = R.string.end_time_label),
+            initialTime = uiState.endTime,
+            onTimeSelected = taskDetailViewModel::updateEndTime
+        )
 
         OutlinedButton(
-            onClick = { onNavigateToList() },
+            onClick = {
+                // Use TimeUtil.calculateDuration
+                val duration = calculateDuration(uiState.startTime, uiState.endTime)
+                val newTask = Task(
+                    id = uiState.taskId,
+                    activityName = uiState.activityName,
+                    date = uiState.date,
+                    startTimeInMillis = uiState.startTime,
+                    endTimeInMillis = uiState.endTime,
+                    duration = duration
+                )
+                if (uiState.isEditMode) {
+                    taskDetailViewModel.updateTask(newTask)
+                } else {
+                    taskDetailViewModel.insertTask(newTask)
+                }
+                onNavigateToList()
+            },
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Color.White, contentColor = Green
             ),
@@ -154,23 +191,25 @@ fun TaskDetailScreen(
             Text(text = stringResource(id = R.string.done).uppercase())
         }
     }
-}
+
+}//end of TaskDetailScreen
 
 @Composable
-fun DetailDateButton() {
+fun DetailDateButton(initialDate: String, onDateSelected: (String) -> Unit) {
     var date by remember {
         mutableStateOf(TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis))
     }
-
     var showDatePicker by remember { mutableStateOf(false) }
 
     LabelButtonRow(
-        label = stringResource(id = R.string.date_label).uppercase(), buttonInfo = date
+        label = stringResource(id = R.string.date_label).uppercase(), buttonInfo = initialDate
     ) { showDatePicker = true }
 
     if (showDatePicker) {
-        DetailDatePickerDialog(onDateSelected = { date = it },
-            onDismiss = { showDatePicker = false })
+        DetailDatePickerDialog(initialDate, onDateSelected = { newDate ->
+            date = newDate
+            onDateSelected(newDate)
+        }, onDismiss = { showDatePicker = false })
     }
 }
 
@@ -178,22 +217,18 @@ fun DetailDateButton() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailDatePickerDialog(
-    onDateSelected: (String) -> Unit, onDismiss: () -> Unit
+    initialDate: String, onDateSelected: (String) -> Unit, onDismiss: () -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
-
+    val datePickerState = rememberDatePickerState(TimeUtil.convertDateToMillis(initialDate))
     val selectedDate = datePickerState.selectedDateMillis?.let {
         TimeUtil.convertMillisToDate(it)
     } ?: ""
-
 
     DatePickerDialog(onDismissRequest = { onDismiss() }, confirmButton = {
         Button(onClick = {
             onDateSelected(selectedDate)
             onDismiss()
-        }
-
-        ) {
+        }) {
             Text(text = stringResource(id = R.string.ok).uppercase())
         }
     }, dismissButton = {
@@ -207,36 +242,30 @@ fun DetailDatePickerDialog(
     }
 }
 
-
 @Composable
-fun TimePickerRow(timeRowLabel: String) {
-    var time by remember {
-        mutableStateOf(TimeUtil.convertTime(Calendar.getInstance().time))
-    }
+fun TimePickerRow(timeRowLabel: String, initialTime: String, onTimeSelected: (String) -> Unit) {
     var showTimePicker by remember { mutableStateOf(false) }
-    LabelButtonRow(
-        label = timeRowLabel.uppercase(), buttonInfo = time
-    ) { showTimePicker = true }
+    LabelButtonRow(label = timeRowLabel.uppercase(), buttonInfo = initialTime) {
+        showTimePicker = true
+    }
 
     if (showTimePicker) {
-        DetailTimePickerDialog(onTimeSelected = { time = it },
-            onDismiss = { showTimePicker = false })
+        DetailTimePickerDialog(initialTime, onTimeSelected = { selectedTime ->
+            onTimeSelected(selectedTime)
+        }, onDismiss = { showTimePicker = false })
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailTimePickerDialog(onTimeSelected: (String) -> Unit, onDismiss: () -> Unit) {
-
-    val currentTime = TimeUtil.convertTime(Calendar.getInstance().time)
-    val (hour, minute) = currentTime.split(":")
-
-
+fun DetailTimePickerDialog(
+    initialTime: String, onTimeSelected: (String) -> Unit, onDismiss: () -> Unit
+) {
+    val (hour, minute) = initialTime.split(":")
     val timePickerState = rememberTimePickerState(
         initialHour = hour.toInt(), initialMinute = minute.toInt(), is24Hour = false
     )
     val selectedTime = String.format("%02d:%02d", timePickerState.hour, timePickerState.minute)
-
 
     TimePickerDialog(onDismissRequest = { onDismiss() }, onConfirm = {
         onTimeSelected(selectedTime)

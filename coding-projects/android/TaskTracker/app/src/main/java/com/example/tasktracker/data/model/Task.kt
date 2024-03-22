@@ -12,9 +12,13 @@ data class Task(
     val id: Int = 0,
     val activityName: String,
     val date: String,
-    val startTimeInMillis: Int,
-    val endTimeInMillis: Int,
-    val duration: String,
-
+    val startTimeInMillis: String,
+    val endTimeInMillis: String,
+    val duration: String
     // these property names and types are subject to change when app persistence is implemented
-)
+) {
+
+    override fun toString(): String {
+        return "Task(id=$id, activityName='$activityName', date='$date', startTimeInMillis='$startTimeInMillis', endTimeInMillis='$endTimeInMillis', duration='$duration')"
+    }
+}

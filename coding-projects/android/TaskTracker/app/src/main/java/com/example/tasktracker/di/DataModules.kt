@@ -28,6 +28,7 @@ object DatabaseModule {
             context.applicationContext,
             AppDatabase::class.java,
             "TaskList.db"
-        ).build()
+        ).fallbackToDestructiveMigration() //May need to change this before prod
+            .build()
     }
 }
