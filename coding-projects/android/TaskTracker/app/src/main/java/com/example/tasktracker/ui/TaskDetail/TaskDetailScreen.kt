@@ -78,8 +78,7 @@ fun TaskDetailScreen(
     }
     val onDeleteConfirmed = {
         setShowDeleteConfirmationPopup(false)
-        // delete from db
-        //taskDetailViewModel.deleteTask()
+        onNavigateToList()
     }
     OutlinedCard(
         colors = CardDefaults.cardColors(
