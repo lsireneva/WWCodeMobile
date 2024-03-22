@@ -127,8 +127,7 @@ fun TaskDetailScreen(
         ) { selectedDate ->
             taskDetailViewModel.updateDate(selectedDate)
         }
-        var textState by remember { mutableStateOf("") }
-
+        
         OutlinedTextField(
             value = uiState.activityName,
             onValueChange = { taskDetailViewModel.updateActivity(it) },
