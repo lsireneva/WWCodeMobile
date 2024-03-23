@@ -43,6 +43,7 @@ struct DetailsScreen: View {
                 TextField("Enter your task", text: $taskText)
                     .padding()
                     .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
+                    .padding(.bottom, (viewModel.keyboardHeight/2))
                     .border(.secondary)
                 
                 DatePicker(selection: $startTime, displayedComponents: .hourAndMinute) {
