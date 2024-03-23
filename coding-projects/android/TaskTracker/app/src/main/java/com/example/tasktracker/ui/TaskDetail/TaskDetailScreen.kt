@@ -66,14 +66,24 @@ fun TaskDetailScreen(
             false
         )
     }
+    val (showDeleteConfirmationPopup, setShowDeleteConfirmationPopup) = remember {
+        mutableStateOf(
+            false
+        )
+    }
 
     val uiState by taskDetailViewModel.detailState.collectAsState()
+
     // Function to handle cancel confirmation
     val onCancelConfirmed = {
         setShowCancelConfirmationPopup(false)
         onNavigateToList()
     }
 
+    val onDeleteConfirmed = {
+        setShowDeleteConfirmationPopup(false)
+        onNavigateToList()
+    }
     OutlinedCard(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -92,14 +102,11 @@ fun TaskDetailScreen(
                 .padding(dimensionResource(R.dimen.medium_padding)),
             horizontalArrangement = Arrangement.End
         ) {
+
             Log.d("iseditmode", " ::" + uiState.isEditMode)
             if (uiState.isEditMode) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.outline_delete_24),
-                        contentDescription = stringResource(id = R.string.delete),
-                    )
-                }
+                DeleteButton (onClick = {setShowDeleteConfirmationPopup(true)})
+
             }
             CancelButton(onClick = { setShowCancelConfirmationPopup(true) })
         }
@@ -109,13 +116,18 @@ fun TaskDetailScreen(
                 onConfirm = onCancelConfirmed,
                 onCancel = { setShowCancelConfirmationPopup(false) })
         }
+        if (showDeleteConfirmationPopup){
+            ConfirmationDialog(message = stringResource(id = R.string.delete_popup_message),
+                onConfirm = onDeleteConfirmed,
+                onCancel = {setShowDeleteConfirmationPopup(false)})
+        }
 
         DetailDateButton(
             initialDate = uiState.date,
         ) { selectedDate ->
             taskDetailViewModel.updateDate(selectedDate)
         }
-
+        
         OutlinedTextField(
             value = uiState.activityName,
             onValueChange = { taskDetailViewModel.updateActivity(it) },
@@ -320,6 +332,16 @@ fun CancelButton(onClick: () -> Unit) {
             painter = painterResource(id = R.drawable.baseline_cancel_24),
             contentDescription = stringResource(id = R.string.cancel),
             tint = Color.Red
+        )
+    }
+}
+
+@Composable
+fun DeleteButton(onClick: () -> Unit){
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(id = R.drawable.outline_delete_24),
+            contentDescription = stringResource(id = R.string.delete),
         )
     }
 }
