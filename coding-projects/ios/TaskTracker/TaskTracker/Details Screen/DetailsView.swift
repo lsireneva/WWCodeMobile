@@ -11,7 +11,8 @@ import SwiftData
 struct DetailsScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    
+    @FocusState private var isTextFieldFocused: Bool
+
     @Environment(\.modelContext) private var context
     @ObservedObject var viewModel = DetailsViewModel()
     @State private var taskText: String = ""
@@ -41,6 +42,7 @@ struct DetailsScreen: View {
                 .padding([.leading, .trailing])
                 
                 TextField("Enter your task", text: $taskText)
+                    .focused($isTextFieldFocused)
                     .padding()
                     .frame(minWidth: 0, maxWidth: 300, minHeight: 0, maxHeight: 200, alignment: .topLeading)
                     .padding(.bottom, (viewModel.keyboardHeight/2))
@@ -137,6 +139,9 @@ struct DetailsScreen: View {
                           showButton: $showCancelConfirmationPopup,
                           shouldDismiss: $shouldDismiss)
             }
+        }
+        .onTapGesture {
+            isTextFieldFocused = false
         }
         Spacer()
     }
