@@ -80,6 +80,10 @@ fun TaskDetailScreen(
         onNavigateToList()
     }
 
+    val onDeleteConfirmed = {
+        setShowDeleteConfirmationPopup(false)
+        onNavigateToList()
+    }
     OutlinedCard(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -113,21 +117,8 @@ fun TaskDetailScreen(
                 onCancel = { setShowCancelConfirmationPopup(false) })
         }
         if (showDeleteConfirmationPopup){
-            val duration = calculateDuration(uiState.startTime, uiState.endTime)
-            val task = Task(
-                id = uiState.taskId,
-                activityName = uiState.activityName,
-                date = uiState.date,
-                startTimeInMillis = uiState.startTime,
-                endTimeInMillis = uiState.endTime,
-                duration = duration
-            )
             ConfirmationDialog(message = stringResource(id = R.string.delete_popup_message),
-                onConfirm = {
-                    setShowDeleteConfirmationPopup(false)
-                    taskDetailViewModel.deleteTask(task)
-                    onNavigateToList()
-                },
+                onConfirm = onDeleteConfirmed,
                 onCancel = {setShowDeleteConfirmationPopup(false)})
         }
 
