@@ -28,13 +28,11 @@ import com.example.tasktracker.data.model.Task
  */
 @Composable
 fun TaskCard(task: Task, modifier: Modifier = Modifier, onClick: (Task) -> Unit) {
-    var isExpanded by remember { mutableStateOf(false) }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                isExpanded = !isExpanded
                 onClick(task) },
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -47,7 +45,7 @@ fun TaskCard(task: Task, modifier: Modifier = Modifier, onClick: (Task) -> Unit)
                     .weight(1f)
                     .padding(dimensionResource(R.dimen.medium_padding)),
                 style = MaterialTheme.typography.bodySmall,
-                maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis
 
             )
