@@ -52,7 +52,6 @@ fun TaskCard(task: Task, modifier: Modifier = Modifier, onClick: (Task) -> Unit)
             Text(
                 text = task.duration,
                 modifier = Modifier
-                    .weight(1f)
                     .padding(dimensionResource(R.dimen.medium_padding)),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.End
