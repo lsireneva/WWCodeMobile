@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -25,7 +26,7 @@ data class DetailState(
     val isEditMode: Boolean,
     val taskId: Int = 0,
     val activityName: String = "",
-    val date: String = TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis),
+    val date: String = TimeUtil.convertMillisToDate(Locale.getDefault().toString(), Calendar.getInstance().timeInMillis),
     val startTime: String = TimeUtil.convertTime(Calendar.getInstance().time),
     val endTime: String = TimeUtil.convertTime(Calendar.getInstance().time)
 )
