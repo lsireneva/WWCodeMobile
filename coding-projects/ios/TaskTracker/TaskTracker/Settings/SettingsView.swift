@@ -48,7 +48,7 @@ struct SettingsView: View {
 
                 Section {
                     ThemeView()
-                    // TODO: App Icon #117
+                    AppIconView()
                 } header: {
                     Label("Appearance",
                           systemImage: "paintpalette")
@@ -189,6 +189,23 @@ private struct ThemeView: View {
                 .imageScale(.large)
             Text("App Theme")
             Spacer()
+            Image(systemName: "chevron.right")
+        }
+    }
+}
+
+private struct AppIconView: View {
+    var body: some View {
+        HStack {
+            Image(systemName: "square.fill")
+                .foregroundColor(.purple)
+                .font(Font.body.weight(.regular))
+                .imageScale(.large)
+            Text("App Icon")
+            Spacer()
+            Text("PRO")
+                .foregroundColor(.purple)
+                .font(Font.body.weight(.light))
             Image(systemName: "chevron.right")
         }
     }
