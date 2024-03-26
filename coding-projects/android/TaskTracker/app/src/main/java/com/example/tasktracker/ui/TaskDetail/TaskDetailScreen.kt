@@ -205,7 +205,7 @@ fun TaskDetailScreen(
 @Composable
 fun DetailDateButton(initialDate: String, onDateSelected: (String) -> Unit) {
     var date by remember {
-        mutableStateOf(TimeUtil.convertMillisToDate(Calendar.getInstance().timeInMillis))
+        mutableStateOf(TimeUtil.convertMillisToDate("UTC", Calendar.getInstance().timeInMillis))
     }
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -229,7 +229,7 @@ fun DetailDatePickerDialog(
 ) {
     val datePickerState = rememberDatePickerState(TimeUtil.convertDateToMillis(initialDate))
     val selectedDate = datePickerState.selectedDateMillis?.let {
-        TimeUtil.convertMillisToDate(it)
+        TimeUtil.convertMillisToDate("UTC", it)
     } ?: ""
 
     DatePickerDialog(onDismissRequest = { onDismiss() }, confirmButton = {
