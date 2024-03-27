@@ -1,13 +1,13 @@
 package com.example.tasktracker
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.format.TextStyle
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class TimeUtil {
     companion object {
@@ -23,9 +23,9 @@ class TimeUtil {
             return day == dayOfWeek
         }
 
-        fun convertMillisToDate(millis: Long): String {
+        fun convertMillisToDate(timeZone: String, millis: Long): String {
             val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            formatter.timeZone = TimeZone.getTimeZone(timeZone)
             return formatter.format(Date(millis))
         }
 
